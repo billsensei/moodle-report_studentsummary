@@ -254,6 +254,20 @@
         max-width: none !important;
     }
 
+    /* Course page: one student per printed page; unticked students are left out. */
+    body.report-studentsummary-page .ss-sheet + .ss-sheet {
+        break-before: page;
+    }
+
+    body.report-studentsummary-page .ss-sheet.ss-first {
+        break-before: auto;
+    }
+
+    body.report-studentsummary-page .ss-sheet.ss-unselected,
+    body.ss-printing-subset .ss-sheet:not(.ss-print-only) {
+        display: none !important;
+    }
+
     .report-studentsummary {
         width: 190mm;
         max-width: 190mm;

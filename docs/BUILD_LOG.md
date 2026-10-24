@@ -387,3 +387,18 @@ Maya (as admin, 14 courses) Pages: 1, A4  ("+2 more courses not shown")
 Chloe (no courses)         Pages: 1, A4
 ```
 Rasterised pages inspected: all seven boxes keep their colours, the navigation bar, filter form and Print button are not printed, nothing is cut off. Limits: this is Firefox's print engine through WebDriver, not the interactive print-preview dialog, and the Print button's `window.print()` was not clicked. Greyscale/black-and-white printer output and RTL languages are still unchecked.
+
+## 0.4.0: course report, all students (2026-10-24)
+New `course.php` (teacher page: one A4 summary per active student, tick boxes, Print selected / Print this one, group menu, one date range, 10/25/50/100 per page), `access::get_course_students()`, `output\course_report_page`, `course_report_viewed` event, course Reports-page link, templates `summary` (shared sheet) / `course`, AMD `course`, `.ss-sheet` print rules, `behat_report_studentsummary` page resolver. Single-report template split into `report` + `summary`; element ids now carry a per-student prefix so they stay unique on the course page. Version 2026102404, release 0.4.0; zip `dist/report_studentsummary_2026102404.zip`.
+```
+phpunit --fail-on-warning   5.1.8+: OK, 56 tests, 347 assertions (deprecations: the @covers notes)
+                            4.5.15:  OK, 56 tests, 347 assertions, 2 risky (core PHP 8.4 deprecation output, as before)
+behat @report_studentsummary 5.1.8+: 19 scenarios (19 passed), 140 steps (incl. @javascript tick-box scenario)
+moodle-plugin-ci (5.1 tree) phplint, phpmd, phpcs --max-warnings 0, validate, mustache: clean
+grunt amd / stylelint:css   clean; amd/build/course.min.js(.map) identical to repo copy
+print (headless Chromium, real 5.1 site, teacher Tessa, BIO101: 2 students)  2 pages, A4, one student per page, no trailing blank page; with one student unticked: 1 page
+```
+- Theme CSS is cached: after changing `styles.css`, run `php admin/cli/purge_caches.php` before checking print output.
+- Behat on 4.5.15 (0.4.0): 19 scenarios (19 passed), 140 steps (140 passed).
+- Not re-run for 0.4.0: `phpdoc` (needs local_moodlecheck installed temporarily), Firefox print of the course page, the real Print button / print-preview dialog (the print rules were checked with the selection classes applied by hand; the JS selection itself was checked by Behat), classes larger than 2 students and the paging bar in a browser (paging is covered by PHPUnit).
+- Behat quirk: a permission exception on the very first "I am on the ... page" step is reported as a step failure, so the student-refused case is covered by PHPUnit (`access_course_students_test`) rather than Behat.

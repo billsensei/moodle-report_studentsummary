@@ -41,4 +41,14 @@ class renderer extends \plugin_renderer_base {
     protected function render_report_page(report_page $page): string {
         return $this->render_from_template('report_studentsummary/report', $page->export_for_template($this));
     }
+
+    /**
+     * Render the all-students course page.
+     *
+     * @param course_report_page $page The renderable.
+     * @return string
+     */
+    protected function render_course_report_page(course_report_page $page): string {
+        return $this->render_from_template('report_studentsummary/course', $page->export_for_template($this));
+    }
 }

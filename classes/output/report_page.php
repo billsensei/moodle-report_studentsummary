@@ -52,6 +52,8 @@ class report_page implements \renderable, \templatable {
     private $from;
     /** @var int|null Range end. */
     private $to;
+    /** @var string Prefix that keeps element ids unique when several reports share a page. */
+    private $idprefix;
 
     /**
      * Constructor.
@@ -60,12 +62,14 @@ class report_page implements \renderable, \templatable {
      * @param int $viewerid The viewing user's id.
      * @param int|null $from Optional range start timestamp.
      * @param int|null $to Optional range end timestamp.
+     * @param string $idprefix Prefix for element ids, needed when several reports are on one page.
      */
-    public function __construct(\stdClass $user, int $viewerid, ?int $from = null, ?int $to = null) {
+    public function __construct(\stdClass $user, int $viewerid, ?int $from = null, ?int $to = null, string $idprefix = '') {
         $this->user = $user;
         $this->viewerid = $viewerid;
         $this->from = $from;
         $this->to = $to;
+        $this->idprefix = preg_replace('/[^a-z0-9-]/i', '', $idprefix);
     }
 
     /**
@@ -85,6 +89,7 @@ class report_page implements \renderable, \templatable {
         $picture->size = 100;
 
         $data = new \stdClass();
+        $data->idprefix = $this->idprefix;
         $data->fullname = fullname($this->user);
         $data->pictureurl = $picture->get_url($PAGE)->out(false);
         $data->sitename = format_string($SITE->fullname, true, ['context' => \context_system::instance()]);
@@ -153,7 +158,7 @@ class report_page implements \renderable, \templatable {
     ): array {
         return [
             'boxclass' => 'ss-box-' . $colour,
-            'boxid' => 'ss-' . $id,
+            'boxid' => 'ss-' . $this->idprefix . $id,
             'heading' => get_string($headingstring, 'report_studentsummary'),
             'hasfigure' => $figure !== null,
             'figure' => $figure,

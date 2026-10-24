@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0 (2026-10-24) - beta
+
+- New: **Student summaries (all students)** for teachers. Open it from the course **Reports** page (or `report/studentsummary/course.php?id=<course id>`).
+  - One summary per active student of the course, each on its own A4 page when printed.
+  - Tick boxes choose who prints; **Print selected** prints the ticked students, **Print this one** prints a single student.
+  - Group menu (respects separate groups), one date range for the whole class, and 10/25/50/100 students per page (default 25).
+  - Needs `report/studentsummary:viewall` in the course. Each student is subject to the same rules as a single report (hidden grades, separate groups, suspended users).
+  - New event: `\report_studentsummary\event\course_report_viewed`.
+- Fixed: README had leftover merge-conflict markers.
+
 ## 0.3.0 (2026-10-24) - beta
 
 - New: choose the report colours (Site administration > Plugins > Reports > Student summary > Report colours).

@@ -133,6 +133,37 @@ class access {
     }
 
     /**
+     * Students of a course whose reports the viewer may open.
+     *
+     * Active students only (those holding moodle/grade:view, the gradebook student role), optionally limited to
+     * one group. Each one must also pass the same per-course rules as a single report, which covers separate groups,
+     * suspended accounts and the viewer's own course access.
+     *
+     * @param \stdClass $course Course record including groupmode.
+     * @param int|null $viewerid Viewer, null for the current user.
+     * @param int $groupid Group to limit to, 0 for everyone.
+     * @return \stdClass[] User records keyed by id, sorted by last then first name.
+     */
+    public static function get_course_students(\stdClass $course, ?int $viewerid = null, int $groupid = 0): array {
+        global $USER;
+
+        $viewerid ??= (int)$USER->id;
+        $context = \context_course::instance($course->id);
+        if (
+            (int)$course->id === SITEID || !$viewerid || isguestuser($viewerid) ||
+            !has_capability('report/studentsummary:viewall', $context, $viewerid)
+        ) {
+            return [];
+        }
+        $users = get_enrolled_users($context, 'moodle/grade:view', $groupid, 'u.*', 'u.lastname, u.firstname, u.id', 0, 0, true);
+        $allowed = array_filter(
+            $users,
+            fn($user) => !$user->deleted && !$user->suspended && self::can_view_in_course($course, $user, $viewerid)
+        );
+        return $allowed;
+    }
+
+    /**
      * Whether the viewer may see the user in the course, honouring group mode.
      *
      * @param \stdClass $course Course record including groupmode.

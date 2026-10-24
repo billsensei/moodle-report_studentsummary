@@ -1,5 +1,3 @@
-# moodle-report_studentsummary
-=======
 # Student Summary Report (report_studentsummary)
 
 A Moodle report that summarises one student's engagement across the site on a single, printable A4 page.
@@ -16,11 +14,17 @@ A Moodle report that summarises one student's engagement across the site on a si
 | Courses enrolled | Count and completion progress per course |
 | Current grades | Course total per enrolled course |
 
+### All students of a course
+
+Teachers can open **Course > Reports > Student summaries (all students)** to see one summary per active student. Each prints on its own A4 page. Tick the students you want and press **Print selected**, or use **Print this one** above a single summary. Choose a group (in group courses), a date range that applies to the whole class, and how many students to show per page (25 by default; paging links appear for larger classes, and printing covers the students on the current page).
+
+### Single student
+
 Use the **Print** button, or the browser's print dialog. The page prints on one A4 portrait sheet with colours kept and navigation hidden. A start and end date can limit the time estimate; completion and grades are always current.
 
 ## Requirements
 
-Moodle 4.5 or later (tested on 4.5.15 and 5.0.11).
+Moodle 4.5 or later (tested on 4.5.15, 5.0.11 and 5.1.8).
 
 ## Installation
 
@@ -67,10 +71,8 @@ Colour choices are checked so that the text on them keeps a contrast ratio of at
 
 ## Privacy
 
-The plugin stores no personal data (it implements the null privacy provider). The only copy of any figure is a 10 minute cache of the estimated time totals in the viewer's own session, discarded when the session ends. Each view of a report is recorded by the standard log store as a `report_viewed` event.
+The plugin stores no personal data (it implements the null privacy provider). The only copy of any figure is a 10 minute cache of the estimated time totals in the viewer's own session, discarded when the session ends. Each view of a report is recorded by the standard log store as a `report_viewed` event (a course page as `course_report_viewed`).
 
 ## Licence
 
 GNU GPL v3 or later.
-742b6e6 (First Version)
-# moodle-report_studentsummary

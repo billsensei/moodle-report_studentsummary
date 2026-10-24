@@ -61,3 +61,24 @@ function report_studentsummary_myprofile_navigation(
 function report_studentsummary_can_view(stdClass $user): bool {
     return \report_studentsummary\local\access::can_view_user($user);
 }
+
+/**
+ * Add a "Student summaries" link to the course Reports page for teachers.
+ *
+ * @param navigation_node $navigation The Reports navigation node of the course.
+ * @param stdClass $course The course.
+ * @param context $context The course context.
+ */
+function report_studentsummary_extend_navigation_course($navigation, $course, $context): void {
+    if ((int)$course->id === SITEID || !has_capability('report/studentsummary:viewall', $context)) {
+        return;
+    }
+    $navigation->add(
+        get_string('coursesummaries', 'report_studentsummary'),
+        new moodle_url('/report/studentsummary/course.php', ['id' => $course->id]),
+        navigation_node::TYPE_SETTING,
+        null,
+        null,
+        new pix_icon('i/report', '')
+    );
+}

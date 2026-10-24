@@ -17,113 +17,35 @@
 {{!
     @template report_studentsummary/report
 
-    The A4 student summary grid.
+    The single student summary page: a print button above one summary.
 
     Context variables required for this template:
-    * fullname, pictureurl, sitename, reportdate, hasrange, range
-    * colourstyle - CSS custom properties for the box colours (validated hex values only)
-    * kpis - Box contexts, see report_studentsummary/box
-    * breakdowns - Box contexts, see report_studentsummary/box
-    * coursecount, hascourses, courses (name, hasprogress, progress)
-    * hasmorecourses, morecourses
-    * grades (name, graded, hidden, notgraded, display, haspercentage, percentage)
+    * Everything listed in report_studentsummary/summary
 
     Example context (json):
     {
+        "idprefix": "",
         "fullname": "Ada Lovelace",
         "pictureurl": "https://example.com/pix/u/f1.png",
         "sitename": "Example site",
         "reportdate": "23/10/26",
-        "hasrange": true,
+        "hasrange": false,
         "range": "All time",
-        "colourstyle": "--ss-ink:#1f2933;--ss-blue-bg:#dbeafe;--ss-blue-border:#3b82f6;",
-        "kpis": [{"boxclass": "ss-box-blue", "boxid": "ss-activities", "heading": "Activities completed",
-            "hasfigure": true, "figure": "3", "figurelabel": "completed", "hasitems": false, "items": [], "note": ""}],
+        "colourstyle": "",
+        "kpis": [],
         "breakdowns": [],
-        "coursecount": 1,
-        "hascourses": true,
-        "courses": [{"name": "Maths", "hasprogress": true, "progress": 50}],
+        "coursecount": 0,
+        "hascourses": false,
+        "courses": [],
         "hasmorecourses": false,
         "morecourses": 0,
-        "grades": [{"name": "Maths", "graded": true, "hidden": false, "notgraded": false, "display": "72.00",
-            "haspercentage": true, "percentage": 72}]
+        "grades": []
     }
 }}
 <div class="ss-noprint text-end mb-3">
     <button type="button" class="btn btn-secondary" data-action="report_studentsummary-print">{{#str}} printreport, report_studentsummary {{/str}}</button>
 </div>
-<div class="report-studentsummary" style="{{colourstyle}}">
-    <div class="ss-grid">
-        <header class="ss-box ss-box-header ss-span-4">
-            <img class="ss-picture" src="{{pictureurl}}" alt="" width="64" height="64">
-            <div class="ss-header-text">
-                <h2 class="ss-name">{{fullname}}</h2>
-                <p class="ss-meta">{{sitename}}</p>
-                <p class="ss-meta">{{#str}} reportdate, report_studentsummary {{/str}}: {{reportdate}}</p>
-                <p class="ss-meta">{{#str}} daterange, report_studentsummary {{/str}}: {{range}}</p>
-            </div>
-        </header>
-
-        {{#kpis}}
-            {{> report_studentsummary/box}}
-        {{/kpis}}
-        {{#breakdowns}}
-            {{> report_studentsummary/box}}
-        {{/breakdowns}}
-
-        <section class="ss-box ss-box-teal ss-span-4" aria-labelledby="ss-courses-heading">
-            <h2 class="ss-box-heading" id="ss-courses-heading">{{#str}} coursesenrolled, report_studentsummary {{/str}}</h2>
-            <p class="ss-figure"><span class="ss-figure-value">{{coursecount}}</span> <span class="ss-figure-label">{{#str}} courses {{/str}}</span></p>
-            {{#hascourses}}
-            <table class="ss-table">
-                <thead>
-                    <tr>
-                        <th scope="col">{{#str}} course {{/str}}</th>
-                        <th scope="col">{{#str}} progress, report_studentsummary {{/str}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#courses}}
-                    <tr>
-                        <td>{{name}}</td>
-                        <td>{{#hasprogress}}<progress class="ss-bar" max="100" value="{{progress}}" aria-hidden="true"></progress>{{progress}}%{{/hasprogress}}{{^hasprogress}}{{#str}} na, report_studentsummary {{/str}}{{/hasprogress}}</td>
-                    </tr>
-                    {{/courses}}
-                </tbody>
-            </table>
-            {{/hascourses}}
-            {{^hascourses}}<p class="ss-note">{{#str}} nocourses, report_studentsummary {{/str}}</p>{{/hascourses}}
-            {{#hasmorecourses}}<p class="ss-note">{{#str}} morecourses, report_studentsummary, {{morecourses}} {{/str}}</p>{{/hasmorecourses}}
-        </section>
-
-        <section class="ss-box ss-box-rose ss-span-4" aria-labelledby="ss-grades-heading">
-            <h2 class="ss-box-heading" id="ss-grades-heading">{{#str}} currentgrades, report_studentsummary {{/str}}</h2>
-            {{#hascourses}}
-            <table class="ss-table">
-                <thead>
-                    <tr>
-                        <th scope="col">{{#str}} course {{/str}}</th>
-                        <th scope="col">{{#str}} grade, report_studentsummary {{/str}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#grades}}
-                    <tr>
-                        <td>{{name}}</td>
-                        <td>
-                            {{#graded}}{{#haspercentage}}<progress class="ss-bar" max="100" value="{{percentage}}" aria-hidden="true"></progress>{{/haspercentage}}{{display}}{{#haspercentage}} ({{percentage}}%){{/haspercentage}}{{/graded}}
-                            {{#hidden}}{{#str}} hiddengrade, report_studentsummary {{/str}}{{/hidden}}
-                            {{#notgraded}}{{#str}} notgraded, report_studentsummary {{/str}}{{/notgraded}}
-                        </td>
-                    </tr>
-                    {{/grades}}
-                </tbody>
-            </table>
-            {{/hascourses}}
-            {{^hascourses}}<p class="ss-note">{{#str}} nocourses, report_studentsummary {{/str}}</p>{{/hascourses}}
-        </section>
-    </div>
-</div>
+{{> report_studentsummary/summary}}
 {{#js}}
     require(['report_studentsummary/print'], function(print) {
         print.init();

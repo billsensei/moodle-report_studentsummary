@@ -41,8 +41,13 @@ class filter_form extends \moodleform {
      */
     protected function definition(): void {
         $mform = $this->_form;
-        $mform->addElement('hidden', 'userid', $this->_customdata['userid']);
-        $mform->setType('userid', PARAM_INT);
+        // Parameters that must survive a filter submission (the form is a plain GET form).
+        foreach (['userid', 'id', 'group', 'perpage'] as $name) {
+            if (isset($this->_customdata[$name])) {
+                $mform->addElement('hidden', $name, $this->_customdata[$name]);
+                $mform->setType($name, PARAM_INT);
+            }
+        }
         $mform->addElement('date_selector', 'from', get_string('datefrom', 'report_studentsummary'), ['optional' => true]);
         $mform->addElement('date_selector', 'to', get_string('dateto', 'report_studentsummary'), ['optional' => true]);
         $this->add_action_buttons(false, get_string('applyfilter', 'report_studentsummary'));
