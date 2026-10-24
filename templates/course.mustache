@@ -20,7 +20,7 @@
     All student summaries of a course: a toolbar and one A4 sheet per student, each printed on its own page.
 
     Context variables required for this template:
-    * hasstudents, students (id, fullname, summary - see report_studentsummary/summary)
+    * hasstudents, students (id, fullname, selectlabel, summary - see report_studentsummary/summary)
     * count - Number of students in total (all pages)
     * pagingbar - Pre-rendered paging bar HTML, may be empty
 
@@ -32,6 +32,7 @@
         "students": [{
             "id": 7,
             "fullname": "Ada Lovelace",
+            "selectlabel": "Print Ada Lovelace",
             "summary": {
                 "idprefix": "u7-",
                 "fullname": "Ada Lovelace",
@@ -73,7 +74,7 @@
         <div class="ss-noprint d-flex align-items-center gap-3 mt-4 mb-2">
             <div class="form-check mb-0">
                 <input class="form-check-input" type="checkbox" id="ss-select-{{id}}" data-action="report_studentsummary-select" checked>
-                <label class="form-check-label" for="ss-select-{{id}}">{{#str}} selectstudent, report_studentsummary, {{fullname}} {{/str}}</label>
+                <label class="form-check-label" for="ss-select-{{id}}">{{selectlabel}}</label>
             </div>
             <button type="button" class="btn btn-secondary btn-sm ms-auto" data-action="report_studentsummary-printone">{{#str}} printthisone, report_studentsummary {{/str}}</button>
         </div>

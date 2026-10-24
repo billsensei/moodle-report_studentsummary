@@ -118,6 +118,7 @@ class course_report_page implements \renderable, \templatable {
             $data->students[] = [
                 'id' => (int)$user->id,
                 'fullname' => fullname($user),
+                'selectlabel' => get_string('selectstudent', 'report_studentsummary', fullname($user)),
                 'summary' => $report->export_for_template($output),
             ];
         }

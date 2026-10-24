@@ -42,9 +42,10 @@ final class course_report_page_test extends \advanced_testcase {
         $gen = $this->getDataGenerator();
         $course = $gen->create_course();
         $teacher = $gen->create_and_enrol($course, 'editingteacher');
-        for ($i = 0; $i < 12; $i++) {
+        for ($i = 0; $i < 11; $i++) {
             $gen->create_and_enrol($course, 'student');
         }
+        $gen->create_and_enrol($course, 'student', ['firstname' => 'A}}, {{x}}']);
         $this->setUser($teacher);
         $PAGE->set_url('/report/studentsummary/course.php', ['id' => $course->id]);
         $url = new \moodle_url('/report/studentsummary/course.php', ['id' => $course->id]);
@@ -64,6 +65,7 @@ final class course_report_page_test extends \advanced_testcase {
 
         $html = $PAGE->get_renderer('report_studentsummary')->render($page);
         $this->assertSame(10, substr_count($html, 'data-region="report_studentsummary-sheet"'));
+        $this->assertStringContainsString('>Print A}}, {{x}} ', $html);
         $ids = [];
         preg_match_all('/ id="(ss-[^"]+)"/', $html, $ids);
         $this->assertSame(count($ids[1]), count(array_unique($ids[1])));
