@@ -400,7 +400,8 @@ print (headless Chromium, real 5.1 site, teacher Tessa, BIO101: 2 students)  2 p
 ```
 - Theme CSS is cached: after changing `styles.css`, run `php admin/cli/purge_caches.php` before checking print output.
 - Behat on 4.5.15 (0.4.0): 19 scenarios (19 passed), 140 steps (140 passed).
-- Not re-run for 0.4.0: `phpdoc` (needs local_moodlecheck installed temporarily), Firefox print of the course page, the real Print button / print-preview dialog (the print rules were checked with the selection classes applied by hand; the JS selection itself was checked by Behat), classes larger than 2 students and the paging bar in a browser (paging is covered by PHPUnit).
+- phpdoc (0.4.0, Moodle 5.1 tree): clean, 36 PHP files checked, exit 0. `local_moodlecheck` was installed temporarily, run, then uninstalled and removed from the tree.
+- Not re-run for 0.4.0: Firefox print of the course page, the real Print button / print-preview dialog (the print rules were checked with the selection classes applied by hand; the JS selection itself was checked by Behat), classes larger than 2 students and the paging bar in a browser (paging is covered by PHPUnit).
 - Behat quirk: a permission exception on the very first "I am on the ... page" step is reported as a step failure, so the student-refused case is covered by PHPUnit (`access_course_students_test`) rather than Behat.
 
 ### Walk-through updated for 0.4.0 (2026-10-24)
