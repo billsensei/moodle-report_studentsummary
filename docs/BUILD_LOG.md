@@ -414,3 +414,6 @@ phpunit --fail-on-warning   5.1.8+: OK, 56 tests, 350 assertions   4.5.15: OK, 5
 behat @report_studentsummary 5.1.8+: 19 scenarios (19 passed), 140 steps   4.5.15: 19 scenarios (19 passed), 140 steps
 moodle-plugin-ci (5.1 tree) phplint, phpmd, phpcs --max-warnings 0, validate: clean (phpdoc and mustache last run on 0.4.0; no template or docblock-structure change since)
 ```
+
+### Walk-through updated for 0.4.1 (2026-10-25)
+`/home/bill/test2/walk-thru.pdf` (35 pages) and `docs/walk-thru.pdf` now describe release 0.4.1 (version 2026102500, zip `report_studentsummary_2026102500.zip`; the files on the 5.1 site are identical to the zip). Step 1 (plugins overview) was retaken and shows 0.4.1; the quality table lists the 0.4.1 results. Steps 23 to 27 keep their "(0.4.0)" labels because that is when the course report was introduced. The test site's admin password was reset again (local test site only) to take the screenshot.
