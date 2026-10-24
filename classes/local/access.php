@@ -155,7 +155,18 @@ class access {
         ) {
             return [];
         }
-        $users = get_enrolled_users($context, 'moodle/grade:view', $groupid, 'u.*', 'u.lastname, u.firstname, u.id', 0, 0, true);
+        // Only the columns the report needs (name, picture, flags), not the whole user row.
+        $fields = \core_user\fields::for_name()->with_userpic()->including('suspended', 'deleted')->get_required_fields();
+        $users = get_enrolled_users(
+            $context,
+            'moodle/grade:view',
+            $groupid,
+            implode(',', array_map(fn($field) => 'u.' . $field, array_unique($fields))),
+            'u.lastname, u.firstname, u.id',
+            0,
+            0,
+            true
+        );
         $allowed = array_filter(
             $users,
             fn($user) => !$user->deleted && !$user->suspended && self::can_view_in_course($course, $user, $viewerid)

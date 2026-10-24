@@ -52,6 +52,9 @@ final class access_course_students_test extends \advanced_testcase {
 
         $students = access::get_course_students($course, $teacher->id);
         $this->assertSame([(int)$ada->id, (int)$zed->id], array_map('intval', array_keys($students)));
+        // Only the columns the report needs are loaded, never the password hash.
+        $this->assertFalse(property_exists($students[$ada->id], 'password'));
+        $this->assertSame('Adams', $students[$ada->id]->lastname);
     }
 
     /**
