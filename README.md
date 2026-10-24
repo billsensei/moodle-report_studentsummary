@@ -24,7 +24,7 @@ Use the **Print** button, or the browser's print dialog. The page prints on one 
 
 ## Requirements
 
-Moodle 4.5 or later. Release 0.4.1 was tested on 4.5.15 and 5.1.8 (earlier releases also on 5.0.11).
+Moodle 4.5 or later. Release 0.4.1 was tested on 4.5.15, 5.1.8 and 5.2.4 (earlier releases also on 5.0.11).
 
 ## Installation
 

@@ -417,3 +417,13 @@ moodle-plugin-ci (5.1 tree) phplint, phpmd, phpcs --max-warnings 0, validate: cl
 
 ### Walk-through updated for 0.4.1 (2026-10-25)
 `/home/bill/test2/walk-thru.pdf` (35 pages) and `docs/walk-thru.pdf` now describe release 0.4.1 (version 2026102500, zip `report_studentsummary_2026102500.zip`; the files on the 5.1 site are identical to the zip). Step 1 (plugins overview) was retaken and shows 0.4.1; the quality table lists the 0.4.1 results. Steps 23 to 27 keep their "(0.4.0)" labels because that is when the course report was introduced. The test site's admin password was reset again (local test site only) to take the screenshot.
+
+## Moodle 5.2 check, release 0.4.1 (2026-10-25)
+New tree `/home/bill/test2/moodle52`: `git clone --depth 1 -b MOODLE_502_STABLE`, release `5.2.4+ (Build: 20261021)`, PHP 8.4.26 (5.2 needs PHP 8.3+), MariaDB 11.8.6, database `moodle52` (port 3307, prefixes `mdl_`/`phpu_`/`bht_`), data roots `/home/bill/test/m52*`, Behat site on :8008. Layout is the same as 5.1 (`public/` web root, CLI scripts at the tree root). Composer from `moodle51/composer.phar`. The plugin was copied with rsync (not `tools/deploy.sh`, which only knows 4.5, 5.0 and 5.1) and installed by `admin/cli/upgrade.php` without errors.
+```
+phpunit --fail-on-warning   OK, 56 tests, 350 assertions, 12 PHPUnit deprecations (the @covers notes)
+behat @report_studentsummary 19 scenarios (19 passed), 140 steps (140 passed)
+moodle-plugin-ci (MOODLE_DIR=moodle52) phplint, phpmd, phpcs --max-warnings 0, validate, mustache, savepoints: clean
+```
+- Not run on 5.2: phpdoc, grunt (`npm ci` not done in this tree), the print-to-A4 check and the 60-student class.
+- `moodle` DB user needed `GRANT ALL` on `moodle52` by the MariaDB root user (socket `/home/bill/.local/var/mariadb/mysqld.sock`).
