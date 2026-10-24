@@ -406,3 +406,11 @@ print (headless Chromium, real 5.1 site, teacher Tessa, BIO101: 2 students)  2 p
 
 ### Walk-through updated for 0.4.0 (2026-10-24)
 `/home/bill/test2/walk-thru.pdf` is now 35 pages (the 0.3.0 version is kept as `dist/walkthrough51/walk-thru-0.3.0.pdf`). Steps 23 to 27 were added: course Reports link, all-students page, tick-box selection, and the real print output for the whole class (2 pages) and for a selection (1 page). Screenshots were taken on the 5.1.8+ site as Tessa (headless Chrome through chromedriver; print output from the WebDriver `/print` endpoint). Cover, contents, summary and quality table updated to 0.4.0 (quality rows not re-run for 0.4.0 are marked as such). Source: `dist/walkthrough51/walkthru.html`.
+
+## 0.4.1: course page loads only needed user columns (2026-10-25)
+Version 2026102500, release 0.4.1. `get_course_students()` selects name, picture and status columns only (no password hash); select-student label built in PHP. Zip `dist/report_studentsummary_2026102500.zip`.
+```
+phpunit --fail-on-warning   5.1.8+: OK, 56 tests, 350 assertions   4.5.15: OK, 56 tests, 350 assertions, 2 risky (core PHP 8.4 deprecation output)
+behat @report_studentsummary 5.1.8+: 19 scenarios (19 passed), 140 steps   4.5.15: 19 scenarios (19 passed), 140 steps
+moodle-plugin-ci (5.1 tree) phplint, phpmd, phpcs --max-warnings 0, validate: clean (phpdoc and mustache last run on 0.4.0; no template or docblock-structure change since)
+```

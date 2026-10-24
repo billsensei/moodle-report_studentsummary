@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1 (2026-10-25) - beta
+
+- Security hardening: the course page (Student summaries, all students) now loads only the user columns it needs (name, picture, status) instead of the whole user row, so password hashes and other unused fields are never read into memory.
+- The select-student label is built in PHP and escaped by the template, so a name containing braces or commas cannot break the label.
+
 ## 0.4.0 (2026-10-24) - beta
 
 - New: **Student summaries (all students)** for teachers. Open it from the course **Reports** page (or `report/studentsummary/course.php?id=<course id>`).
