@@ -1,0 +1,317 @@
+/*
+ * Student summary report styles.
+ * Everything is scoped to .report-studentsummary or body.report-studentsummary-page so nothing leaks to other pages.
+ * Colours are light tints with dark text (WCAG AA) so the page is legible in greyscale print.
+ */
+
+.report-studentsummary {
+    --ss-ink: #1f2933;
+    --ss-ink-soft: #3e4c59;
+    --ss-header-bg: #e4e7eb;
+    --ss-header-border: #9aa5b1;
+    --ss-blue-bg: #dbeafe;
+    --ss-blue-border: #3b82f6;
+    --ss-green-bg: #dcfce7;
+    --ss-green-border: #22a45d;
+    --ss-amber-bg: #fef3c7;
+    --ss-amber-border: #d99706;
+    --ss-purple-bg: #ede9fe;
+    --ss-purple-border: #8b5cf6;
+    --ss-teal-bg: #ccfbf1;
+    --ss-teal-border: #14b8a6;
+    --ss-rose-bg: #ffe4e6;
+    --ss-rose-border: #e11d48;
+    --ss-bar: #1f2933;
+    --ss-bar-bg: rgba(31, 41, 51, 0.15);
+
+    color: var(--ss-ink);
+    max-width: 210mm;
+    margin-inline: auto;
+}
+
+.report-studentsummary .ss-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4mm;
+}
+
+.report-studentsummary .ss-box {
+    border-radius: 4mm;
+    border: 0.4mm solid var(--ss-box-border, transparent);
+    background: var(--ss-box-bg, #fff);
+    padding: 4mm;
+    break-inside: avoid;
+    min-width: 0;
+}
+
+.report-studentsummary .ss-span-4 {
+    grid-column: span 4;
+}
+
+.report-studentsummary .ss-span-2 {
+    grid-column: span 2;
+}
+
+.report-studentsummary .ss-box-header {
+    --ss-box-bg: var(--ss-header-bg);
+    --ss-box-border: var(--ss-header-border, #9aa5b1);
+    display: flex;
+    align-items: center;
+    gap: 4mm;
+}
+
+.report-studentsummary .ss-box-blue {
+    --ss-box-bg: var(--ss-blue-bg);
+    --ss-box-border: var(--ss-blue-border);
+}
+
+.report-studentsummary .ss-box-green {
+    --ss-box-bg: var(--ss-green-bg);
+    --ss-box-border: var(--ss-green-border);
+}
+
+.report-studentsummary .ss-box-amber {
+    --ss-box-bg: var(--ss-amber-bg);
+    --ss-box-border: var(--ss-amber-border);
+}
+
+.report-studentsummary .ss-box-purple {
+    --ss-box-bg: var(--ss-purple-bg);
+    --ss-box-border: var(--ss-purple-border);
+}
+
+.report-studentsummary .ss-box-teal {
+    --ss-box-bg: var(--ss-teal-bg);
+    --ss-box-border: var(--ss-teal-border);
+}
+
+.report-studentsummary .ss-box-rose {
+    --ss-box-bg: var(--ss-rose-bg);
+    --ss-box-border: var(--ss-rose-border);
+}
+
+.report-studentsummary .ss-picture {
+    border-radius: 50%;
+    flex: none;
+}
+
+.report-studentsummary .ss-name {
+    font-size: 1.5rem;
+    margin: 0 0 0.25rem;
+}
+
+.report-studentsummary .ss-meta {
+    margin: 0;
+    color: var(--ss-ink-soft);
+}
+
+.report-studentsummary .ss-box-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.report-studentsummary .ss-figure {
+    margin: 0 0 0.25rem;
+}
+
+.report-studentsummary .ss-figure-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.report-studentsummary .ss-figure-label,
+.report-studentsummary .ss-note {
+    color: var(--ss-ink-soft);
+}
+
+.report-studentsummary .ss-note {
+    font-size: 0.8125rem;
+    margin: 0.25rem 0 0;
+}
+
+.report-studentsummary .ss-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.report-studentsummary .ss-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    border-bottom: 0.2mm solid rgba(31, 41, 51, 0.2);
+    padding: 0.15rem 0;
+}
+
+.report-studentsummary .ss-list-value {
+    font-weight: 700;
+}
+
+.report-studentsummary .ss-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.report-studentsummary .ss-table th,
+.report-studentsummary .ss-table td {
+    text-align: start;
+    padding: 0.15rem 0.25rem;
+    border-bottom: 0.2mm solid rgba(31, 41, 51, 0.2);
+    vertical-align: middle;
+}
+
+.report-studentsummary .ss-table th {
+    font-weight: 700;
+}
+
+.report-studentsummary .ss-bar {
+    appearance: none;
+    display: inline-block;
+    vertical-align: middle;
+    width: 30mm;
+    height: 2.5mm;
+    border: 0;
+    border-radius: 1.25mm;
+    overflow: hidden;
+    background: var(--ss-bar-bg);
+    color: var(--ss-bar);
+    margin-inline-end: 0.25rem;
+}
+
+.report-studentsummary .ss-bar::-webkit-progress-bar {
+    background: var(--ss-bar-bg);
+}
+
+.report-studentsummary .ss-bar::-webkit-progress-value {
+    background: var(--ss-bar);
+}
+
+.report-studentsummary .ss-bar::-moz-progress-bar {
+    background: var(--ss-bar);
+}
+
+/* Narrow screens: stack the boxes. */
+@media (max-width: 767.98px) {
+    .report-studentsummary .ss-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .report-studentsummary .ss-span-4 {
+        grid-column: span 2;
+    }
+}
+
+/* stylelint-disable csstree/validator -- named pages are newer than the validator. */
+/*
+ * Named page: A4 portrait only for the report page, so printing other Moodle pages is not affected.
+ * It is applied to the body (not the wrapper) because a page-name change on a nested element forces extra page breaks.
+ */
+@page ss-a4 {
+    size: A4 portrait;
+    margin: 10mm;
+}
+
+/* stylelint-disable declaration-no-important, unit-disallowed-list -- print needs fixed pt sizes and Boost overrides. */
+@media print {
+    body.report-studentsummary-page {
+        page: ss-a4;
+    }
+
+    /* Hide Boost chrome on the report page only. */
+    body.report-studentsummary-page .navbar,
+    body.report-studentsummary-page #page-header,
+    body.report-studentsummary-page #page-navbar,
+    body.report-studentsummary-page [data-region="drawer"],
+    body.report-studentsummary-page .drawer,
+    body.report-studentsummary-page .secondary-navigation,
+    body.report-studentsummary-page .primary-navigation,
+    body.report-studentsummary-page .activity-navigation,
+    body.report-studentsummary-page #page-footer,
+    body.report-studentsummary-page .btn-footer-popover,
+    body.report-studentsummary-page .ss-noprint {
+        display: none !important;
+    }
+
+    body.report-studentsummary-page,
+    body.report-studentsummary-page #page,
+    body.report-studentsummary-page #page-content,
+    body.report-studentsummary-page #region-main,
+    body.report-studentsummary-page #region-main-box,
+    body.report-studentsummary-page #topofscroll {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    body.report-studentsummary-page #region-main {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .report-studentsummary {
+        width: 190mm;
+        max-width: 190mm;
+        max-height: 277mm;
+        overflow: hidden;
+        font-size: 8pt;
+        line-height: 1.25;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .report-studentsummary * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .report-studentsummary .ss-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3mm;
+    }
+
+    .report-studentsummary .ss-span-4 {
+        grid-column: span 4;
+    }
+
+    .report-studentsummary .ss-span-2 {
+        grid-column: span 2;
+    }
+
+    .report-studentsummary .ss-box {
+        padding: 2.5mm;
+    }
+
+    .report-studentsummary .ss-name {
+        font-size: 14pt;
+    }
+
+    .report-studentsummary .ss-box-heading {
+        font-size: 8pt;
+        margin-bottom: 1mm;
+    }
+
+    .report-studentsummary .ss-figure-value {
+        font-size: 16pt;
+    }
+
+    .report-studentsummary .ss-note {
+        font-size: 7pt;
+    }
+
+    .report-studentsummary .ss-table th,
+    .report-studentsummary .ss-table td {
+        padding: 0.4mm 1mm;
+    }
+
+    .report-studentsummary .ss-bar {
+        width: 25mm;
+        height: 2mm;
+    }
+}
+/* stylelint-enable declaration-no-important, unit-disallowed-list, csstree/validator */

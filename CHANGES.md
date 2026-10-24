@@ -1,0 +1,27 @@
+# Changelog
+
+## 0.3.0 (2026-10-24) - beta
+
+- New: choose the report colours (Site administration > Plugins > Reports > Student summary > Report colours).
+  - A ready-made palette: Default (soft pastels), High contrast, Greyscale (for black-and-white printing) or Earth tones.
+  - Optional per-box background colours, as #rrggbb. The border is derived automatically.
+  - Colours that would make the text hard to read (contrast below 4.5:1, WCAG AA) are refused on the settings page and ignored by the report. Non-hex values are refused.
+  - The colours apply on screen and on the printed A4 page. With nothing configured the report looks exactly as before.
+
+## 0.2.1 (2026-10-24) - beta
+
+- Estimated time spent is now cached for 10 minutes in the viewer's session cache (new `db/caches.php`), so repeated views no longer rescan the log. The cache ends with the session; nothing is stored persistently.
+- "Maximum courses listed" now accepts only whole numbers from 1 to 50 (checked on the settings page and again when the report is built).
+
+## 0.2.0 (2026-10-24) - beta
+
+- Security review (Phase 7):
+  - Teachers whose enrolment is suspended or expired can no longer view reports.
+  - Grades follow gradebook permissions (`moodle/grade:viewall`, and for students "Show gradebook to students").
+  - Time spent is limited to courses the viewer may see.
+  - A missing, deleted, suspended or unauthorised user now gives the same permission error.
+- Added privacy provider test.
+
+## 0.1.0 (2026-10-23) - alpha
+
+- Initial development version: report page, A4 print styles, capabilities, settings, events, PHPUnit and Behat tests.
