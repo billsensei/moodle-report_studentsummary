@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # moodle-report_studentsummary
 =======
 # Student Summary Report (report_studentsummary)
@@ -73,5 +72,5 @@ The plugin stores no personal data (it implements the null privacy provider). Th
 ## Licence
 
 GNU GPL v3 or later.
->>>>>>> 742b6e6 (First Version)
+742b6e6 (First Version)
 # moodle-report_studentsummary
