@@ -22,6 +22,7 @@
  */
 
 import {get_string as getString} from 'core/str';
+import Notification from 'core/notification';
 
 const ROOT = '[data-region="report_studentsummary-course"]';
 const SHEET = '[data-region="report_studentsummary-sheet"]';
@@ -63,6 +64,13 @@ const refresh = async(root) => {
 };
 
 /**
+ * Refresh without leaving a rejected promise unhandled (for example when a string cannot be loaded).
+ *
+ * @param {HTMLElement} root The course report container.
+ */
+const update = (root) => refresh(root).catch(Notification.exception);
+
+/**
  * Print with only the given sheets, then restore the page.
  *
  * @param {HTMLElement[]} sheets Sheets to print.
@@ -76,7 +84,7 @@ const printSheets = (sheets) => {
     const restore = () => {
         body.classList.remove('ss-printing-subset');
         sheets.forEach((sheet) => sheet.classList.remove('ss-print-only'));
-        refresh(root);
+        update(root);
         window.removeEventListener('afterprint', restore);
     };
     window.addEventListener('afterprint', restore);
@@ -98,7 +106,7 @@ export const init = () => {
             });
         }
         if (e.target.matches(SELECT) || e.target.matches(SELECTALL)) {
-            refresh(root);
+            update(root);
         }
     });
     root.addEventListener('click', (e) => {
@@ -113,5 +121,5 @@ export const init = () => {
             printSheets([...root.querySelectorAll(SHEET + ':not(.ss-unselected)')]);
         }
     });
-    refresh(root);
+    update(root);
 };

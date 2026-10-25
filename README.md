@@ -18,6 +18,8 @@ A Moodle report that summarises one student's engagement across the site on a si
 
 Teachers can open **Course > Reports > Student summaries (all students)** to see one summary per active student. Each prints on its own A4 page. Tick the students you want and press **Print selected**, or use **Print this one** above a single summary. Choose a group (in group courses), a date range that applies to the whole class, and how many students to show per page (25 by default; paging links appear for larger classes, and printing covers the students on the current page).
 
+On this page "student" means an active (not suspended) enrolled user who holds `moodle/grade:view` in the course. If a site removes that capability from the student role the page is empty; if it grants it to teachers, they are listed too.
+
 ### Single student
 
 Use the **Print** button, or the browser's print dialog. The page prints on one A4 portrait sheet with colours kept and navigation hidden. A start and end date can limit the time estimate; completion and grades are always current.
@@ -73,7 +75,7 @@ Colour choices are checked so that the text on them keeps a contrast ratio of at
 
 ## Privacy
 
-The plugin stores no personal data (it implements the null privacy provider). The only copy of any figure is a 10 minute cache of the estimated time totals in the viewer's own session, discarded when the session ends. Each view of a report is recorded by the standard log store as a `report_viewed` event (a course page as `course_report_viewed`).
+The plugin stores no personal data (it implements the null privacy provider). The only copy of any figure is a 10 minute cache of the estimated time totals in the viewer's own session, discarded when the session ends. Each view of a report is recorded by the standard log store as a `report_viewed` event (a course page as `course_report_viewed`, plus one `report_viewed` for each student shown on it).
 
 ## Licence
 

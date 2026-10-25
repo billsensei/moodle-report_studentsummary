@@ -473,3 +473,18 @@ moodle-plugin-ci (5.3 tree) phplint, phpmd, phpcs --max-warnings 0: clean
 
 ### Walk-through updated for 0.4.3 (2026-10-25)
 `/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (35 pages) now describe release 0.4.3 (version 2026102502; the files on the 5.1 site are identical to the zip). Step 1 was retaken (shows 0.4.3). Step 14 now shows the clean address (`fromts`/`tots`) instead of the old `sesskey` address, and its caption explains the post-and-redirect. Step 19 no longer says hidden grades "never leak"; it describes the hidden-total rule. The summary lists releases 0.4.1 to 0.4.3 and the 0.4.3 quality table: PHPUnit 65 tests / 379 assertions and Behat 19 scenarios / 143 steps (4.5, 5.1, 5.2, 5.3); phplint, phpmd, phpcs run on 5.3; validate, mustache, phpdoc and the A4 page-count check were not re-run (marked as such). Source: `dist/walkthrough51/walkthru.html`.
+
+## LOW audit items fixed (2026-10-25, not yet released)
+- L1: `course.php` now also triggers `report_viewed` (with `relateduserid`) for each student shown on the page.
+- L3: `grade_summary` and `course_grades` load the user once per call instead of once per course; `report_page` reuses the course list for the time box.
+- L4: `course.php` calls `require_login()` before `get_course()`.
+- `amd/src/course.js`: `refresh()` is wrapped so a rejected promise goes to `Notification.exception`; `amd/build/course.min.js(.map)` rebuilt with grunt on 5.1 (eslint clean).
+- `version.php`: `$plugin->supported = [405, 503]`. README: definition of "student" on the course page, and the extra log events.
+- L6 not changed: the Moodle coding standard (phpcs) flags a `MOODLE_INTERNAL` guard in a functions-only `lib.php` ("Unexpected MOODLE_INTERNAL check"), so the audit item was a false positive. L5 (`{{{pagingbar}}}`) stays as justified. L2 (demo password in public git history) is the owner's decision.
+```
+phpunit --fail-on-warning   4.5.15, 5.1.8+, 5.2.4+, 5.3+: 65 tests, 379 assertions (4.5: 2 risky, core PHP 8.4 deprecation output)
+behat @report_studentsummary 4.5, 5.1, 5.2, 5.3: 19 scenarios (19 passed), 143 steps
+phplint, phpmd, phpcs --max-warnings 0, validate, mustache (5.3 tree): clean
+```
+No test asserts the new per-student events; Behat only shows the course page still loads with them. Version not bumped.
+- Follow-up from the security audit of this change: the grade classes loaded the whole user row (`'*'`, including the password hash) only to read the id. They now load `id` only (as the course page already did). PHPUnit re-run on 5.3: 65 tests, 379 assertions; phpcs clean. Not re-run on the other trees (one-line change).

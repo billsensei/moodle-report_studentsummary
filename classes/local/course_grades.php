@@ -54,8 +54,9 @@ class course_grades {
      */
     public static function get_rows(int $userid, array $courses, ?int $viewerid = null): array {
         $rows = [];
+        $user = \core_user::get_user($userid, 'id', MUST_EXIST);
         foreach ($courses as $course) {
-            $rows[] = self::get_row($userid, $course, $viewerid);
+            $rows[] = self::get_row($user, $course, $viewerid);
         }
         return $rows;
     }
@@ -63,14 +64,15 @@ class course_grades {
     /**
      * Build the row for one course.
      *
-     * @param int $userid The student.
+     * @param \stdClass $user The student.
      * @param \stdClass $course Course record.
      * @param int|null $viewerid Viewing user.
      * @return array
      */
-    private static function get_row(int $userid, \stdClass $course, ?int $viewerid): array {
+    private static function get_row(\stdClass $user, \stdClass $course, ?int $viewerid): array {
+        $userid = (int)$user->id;
         $row = ['courseid' => (int)$course->id, 'status' => self::STATUS_NOTGRADED, 'display' => '', 'percentage' => null];
-        if (!access::can_view_grades($course, \core_user::get_user($userid, '*', MUST_EXIST), $viewerid)) {
+        if (!access::can_view_grades($course, $user, $viewerid)) {
             $row['status'] = self::STATUS_HIDDEN;
             return $row;
         }

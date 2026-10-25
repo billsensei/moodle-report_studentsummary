@@ -52,6 +52,8 @@ class report_page implements \renderable, \templatable {
     private $from;
     /** @var int|null Range end. */
     private $to;
+    /** @var \stdClass[] Courses the viewer may see for this student (set when exported). */
+    private $courses = [];
     /** @var string Prefix that keeps element ids unique when several reports share a page. */
     private $idprefix;
 
@@ -83,6 +85,7 @@ class report_page implements \renderable, \templatable {
 
         unset($output); // Part of the templatable signature.
         $courses = access::get_courses($this->user, $this->viewerid);
+        $this->courses = $courses;
         $completion = completion_summary::get_summary($this->user->id, $courses);
         $grades = grade_summary::get_summary($this->user->id, $courses, $this->viewerid);
         $picture = new \user_picture($this->user);
@@ -295,7 +298,7 @@ class report_page implements \renderable, \templatable {
      * @return int[]
      */
     private function time_courseids(): array {
-        $ids = array_map('intval', array_keys(access::get_courses($this->user, $this->viewerid)));
+        $ids = array_map('intval', array_keys($this->courses));
         if (access::can_view_site_activity($this->user, $this->viewerid)) {
             $ids[] = SITEID;
         }

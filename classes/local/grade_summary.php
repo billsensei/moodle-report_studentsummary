@@ -46,8 +46,9 @@ class grade_summary {
      */
     public static function get_summary(int $userid, array $courses, ?int $viewerid = null): array {
         $percentages = [];
+        $user = \core_user::get_user($userid, 'id', MUST_EXIST);
         foreach ($courses as $course) {
-            $percentages = array_merge($percentages, self::get_course_percentages($userid, $course, $viewerid));
+            $percentages = array_merge($percentages, self::get_course_percentages($user, $course, $viewerid));
         }
         $count = count($percentages);
         return [
@@ -59,14 +60,15 @@ class grade_summary {
     /**
      * Percentages of the visible graded activity items in one course.
      *
-     * @param int $userid The student.
+     * @param \stdClass $user The student.
      * @param \stdClass $course Course record.
      * @param int|null $viewerid Viewing user; null means the current user.
      * @return float[]
      */
-    private static function get_course_percentages(int $userid, \stdClass $course, ?int $viewerid): array {
+    private static function get_course_percentages(\stdClass $user, \stdClass $course, ?int $viewerid): array {
         $percentages = [];
-        if (!access::can_view_grades($course, \core_user::get_user($userid, '*', MUST_EXIST), $viewerid)) {
+        $userid = (int)$user->id;
+        if (!access::can_view_grades($course, $user, $viewerid)) {
             return $percentages;
         }
         $canviewhidden = has_capability('moodle/grade:viewhidden', \context_course::instance($course->id), $viewerid);

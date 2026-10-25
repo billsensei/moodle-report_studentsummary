@@ -34,6 +34,7 @@ $perpage = optional_param('perpage', course_report_page::DEFAULT_PERPAGE, PARAM_
 $from = optional_param('fromts', 0, PARAM_INT);
 $to = optional_param('tots', 0, PARAM_INT);
 
+require_login(); // Before the lookup, so a visitor who is not logged in learns nothing about course ids.
 $course = get_course($courseid);
 if ((int)$course->id === SITEID) {
     throw new moodle_exception('invalidcourseid');
@@ -76,6 +77,13 @@ if ($from || $to) {
 $report = new course_report_page($course, (int)$USER->id, $baseurl, $groupid, $from ?: null, $to ?: null, $page, $perpage);
 
 \report_studentsummary\event\course_report_viewed::create(['context' => $context])->trigger();
+// One event per student shown, so "who viewed this student's data" also finds views from the course page.
+foreach ($report->get_page_students() as $student) {
+    \report_studentsummary\event\report_viewed::create([
+        'context' => context_user::instance($student->id),
+        'relateduserid' => $student->id,
+    ])->trigger();
+}
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($title, 3, 'ss-noprint');
