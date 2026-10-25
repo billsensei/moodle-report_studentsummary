@@ -1,0 +1,23 @@
+{
+    "name": "billsensei/moodle-report_studentsummary",
+    "description": "A Moodle report that summarises one student's engagement across the site on a single, printable A4 page.",
+    "type": "moodle-report",
+    "license": "GPL-3.0-or-later",
+    "homepage": "https://github.com/billsensei/moodle-report_studentsummary",
+    "authors": [
+        {
+            "name": "billsensei",
+            "email": "wrwjpn@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/billsensei/moodle-report_studentsummary/issues",
+        "source": "https://github.com/billsensei/moodle-report_studentsummary"
+    },
+    "require": {
+        "composer/installers": "^1.0 || ^2.0"
+    },
+    "extra": {
+        "installer-name": "studentsummary"
+    }
+}
