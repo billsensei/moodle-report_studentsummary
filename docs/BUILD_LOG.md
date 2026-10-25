@@ -488,3 +488,12 @@ phplint, phpmd, phpcs --max-warnings 0, validate, mustache (5.3 tree): clean
 ```
 No test asserts the new per-student events; Behat only shows the course page still loads with them. Version not bumped.
 - Follow-up from the security audit of this change: the grade classes loaded the whole user row (`'*'`, including the password hash) only to read the id. They now load `id` only (as the course page already did). PHPUnit re-run on 5.3: 65 tests, 379 assertions; phpcs clean. Not re-run on the other trees (one-line change).
+
+## Release 0.4.4 (2026-10-25)
+Version 2026102503, release 0.4.4: the LOW audit fixes above (per-student log events on the course page, user loaded once per call by id only, login before course lookup, `course.js` error handling, `$plugin->supported = [405, 503]`, README definition of "student"). Zip `dist/report_studentsummary_2026102503.zip` (same file list as 0.4.3). Upgrade ran cleanly on 4.5, 5.1, 5.2, 5.3.
+```
+phpunit --fail-on-warning   4.5.15, 5.3+ re-run on the 0.4.4 files: 65 tests, 379 assertions (4.5: 2 risky, core PHP 8.4 deprecation output)
+behat @report_studentsummary 4.5, 5.3 re-run: 19 scenarios (19 passed), 143 steps
+phplint, phpmd, phpcs --max-warnings 0, validate (5.3 tree): clean
+```
+The same code (before the version bump) passed PHPUnit and Behat on 5.1 and 5.2 as well; those two trees were not re-run after the bump. Not re-run: mustache, phpdoc, print page-count checks. The walk-through still describes 0.4.3.

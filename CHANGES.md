@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.4 (2026-10-25) - beta
+
+- The course page (Student summaries, all students) now logs a `report_viewed` event for each student shown, so a search of the log for who viewed a student's report also finds views from the course page.
+- Fewer database queries per report: the user is loaded once per report instead of once per course, and only the id is read (no password hash).
+- `course.php` requires login before it looks up the course, so a visitor who is not logged in learns nothing about course ids.
+- A failure while updating the "n selected" text on the course page is now reported instead of being an unhandled error.
+- Declares the supported Moodle range (4.5 to 5.3).
+- README: explains who counts as a "student" on the course page.
+
 ## 0.4.3 (2026-10-25) - beta
 
 - **Security fix:** 0.4.2 still showed the real course total when every graded item behind it was hidden from the student. The total is now withheld (or shown as empty) in that case too, matching the core grade reports. Upgrading from 0.4.2 or earlier is recommended.
