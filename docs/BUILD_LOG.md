@@ -470,3 +470,6 @@ moodle-plugin-ci (5.3 tree) phplint, phpmd, phpcs --max-warnings 0: clean
 ```
 - Not re-run for 0.4.3: validate, mustache, phpdoc, grunt, the print-to-A4 page-count checks (no template, docblock-structure, JS or CSS change).
 - Still open from the 0.4.1 audit: per-student view events on the course page (LOW), duplicated per-student queries (LOW), `course.php` course lookup before login (LOW), `lib.php` MOODLE_INTERNAL guard (LOW); the walk-through still says 0.4.1 and its step 19 / the README sentence should be re-read against the new grade behaviour.
+
+### Walk-through updated for 0.4.3 (2026-10-25)
+`/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (35 pages) now describe release 0.4.3 (version 2026102502; the files on the 5.1 site are identical to the zip). Step 1 was retaken (shows 0.4.3). Step 14 now shows the clean address (`fromts`/`tots`) instead of the old `sesskey` address, and its caption explains the post-and-redirect. Step 19 no longer says hidden grades "never leak"; it describes the hidden-total rule. The summary lists releases 0.4.1 to 0.4.3 and the 0.4.3 quality table: PHPUnit 65 tests / 379 assertions and Behat 19 scenarios / 143 steps (4.5, 5.1, 5.2, 5.3); phplint, phpmd, phpcs run on 5.3; validate, mustache, phpdoc and the A4 page-count check were not re-run (marked as such). Source: `dist/walkthrough51/walkthru.html`.
