@@ -24,11 +24,11 @@ Use the **Print** button, or the browser's print dialog. The page prints on one 
 
 ## Requirements
 
-Moodle 4.5 or later. Release 0.4.1 was tested on 4.5.15, 5.1.8, 5.2.4 and 5.3 (earlier releases also on 5.0.11).
+Moodle 4.5 or later. Release 0.4.2 was tested on 4.5.15, 5.1.8, 5.2.4 and 5.3 (earlier releases also on 5.0.11).
 
 ## Installation
 
-Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.4.1](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.4.1), beta). It contains one folder, `studentsummary`.
+Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.4.2](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.4.2), beta). It contains one folder, `studentsummary`.
 
 Unpack it into `report/` (Moodle 4.5) or `public/report/` (Moodle 5.1 and later), so the plugin ends up in `report/studentsummary`, then visit **Site administration > Notifications**, or run `php admin/cli/upgrade.php`.
 
@@ -43,7 +43,7 @@ Beyond the capability, the report only includes data the viewer may see:
 
 - Courses where the viewer has active access to the course, and hidden courses only with `moodle/course:viewhiddencourses`.
 - In separate-groups courses, only users who share a group with the viewer, unless the viewer has `moodle/site:accessallgroups`.
-- Grades only with `moodle/grade:viewall`. Students see their own grades only when the course shows the gradebook to students. Hidden grades need `moodle/grade:viewhidden`.
+- Grades only with `moodle/grade:viewall`. Students see their own grades only when the course shows the gradebook to students. Hidden grades need `moodle/grade:viewhidden`. A course total that contains hidden items follows the gradebook setting "Hide totals if they contain hidden items" (shown as Hidden, or recalculated without the hidden items) for viewers without that capability.
 - Time in a course only for courses the viewer may see. Time outside any course is shown on your own report and to viewers with `viewall` on the user or the site.
 
 The report is entered from the user's profile (Reports section) or **Site administration > Reports > Student summary**.

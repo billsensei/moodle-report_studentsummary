@@ -435,4 +435,26 @@ phpunit --fail-on-warning   OK, 56 tests, 350 assertions, 12 PHPUnit deprecation
 behat @report_studentsummary 19 scenarios (19 passed), 140 steps (140 passed)
 moodle-plugin-ci (MOODLE_DIR=moodle53) phplint, phpmd, phpcs --max-warnings 0, validate, mustache, savepoints: clean
 ```
-- Not run on 5.3: phpdoc, grunt, the print-to-A4 check and the 60-student class.
+- Not run on 5.3 in that pass: phpdoc, grunt, the print-to-A4 check and the 60-student class (the print check follows below).
+
+### Print check on Moodle 5.3 (2026-10-25)
+The 5.3 main site (`/home/bill/test2/moodle53`, database `moodle53`, served on :8009) got a small demo set: teacher Tessa, students Alice, Ben, Cara, Dan, Eve (BIO101, 6 completion pages, 120 log rows each, except that Alice's rows were later deleted by a test cleanup and re-inserted with different times; Alice and Ben also in HIS101) and Maya (14 electives). Chrome (chromedriver, WebDriver `/print`, A4, backgrounds on) as Tessa, each printed with margin 0 and shrink-to-fit, with 1 cm margins and shrink-to-fit, and with 1 cm margins and no shrink:
+```
+single report Alice / Ben / Maya (14 courses, "+2 more courses not shown")   1 page each, all three modes
+course page, 5 students, all ticked                                          5 pages, all three modes
+course page, 2 of 5 un-ticked (3 of 5 selected)                              3 pages
+course page, Print this one (same classes the JS sets)                       1 page
+```
+Rasterised Maya and a course-page sheet: all seven boxes keep their colours, nothing is cut off, no blank page. Not covered: Firefox, the interactive print dialog, the real Print button click, greyscale printers, RTL languages.
+
+## 0.4.2: course total no longer leaks hidden grades (2026-10-25)
+Found by the 0.4.1 audit: `course_grades` showed the real course total even when it included items hidden from the student (80 visible + 20 hidden showed 100.00 where the core user report showed "-"), so a student could work out a hidden grade. Affects 0.1.0 to 0.4.1. Fix: for viewers without `moodle/grade:viewhidden` the total follows "Hide totals if they contain hidden items" (hide / recalculate without hidden items / real total), using core's `grade_grade::get_hiding_affected()`; the stricter of the user report and overview settings applies. Version 2026102501, release 0.4.2, zip `dist/report_studentsummary_2026102501.zip`. Also in this release: the new privacy reason string.
+```
+new PHPUnit cases (5): hidden / excluded / real / stricter-setting-wins / no hidden items; the first three failed before the fix and pass after
+live check (5.3): student's total hidden, matching the core user report
+phpunit --fail-on-warning   4.5.15, 5.1.8+, 5.2.4+, 5.3+: OK, 61 tests, 366 assertions (4.5: 2 risky, core PHP 8.4 deprecation output)
+behat @report_studentsummary 4.5.15, 5.1.8+, 5.2.4+, 5.3+: 19 scenarios (19 passed), 140 steps each
+moodle-plugin-ci (5.3 tree) phplint, phpmd, phpcs --max-warnings 0: clean
+```
+- Not re-run for 0.4.2: validate, mustache, phpdoc, grunt, print checks (no template, docblock-structure, JS or CSS change). No Behat scenario for the hidden-total rule (hidden grade items are impractical to set up in Behat); PHPUnit covers it.
+- Still open from the audit: filter form puts `sesskey` in the URL (and in the printed page footer); course page logs no per-student event; the walk-through and README text for step 19 should be re-read against the new behaviour.

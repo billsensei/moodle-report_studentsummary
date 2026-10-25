@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.2 (2026-10-25) - beta
+
+- **Security fix:** the Current grades box showed a student the real course total even when it included grade items hidden from them, so a student could work out a hidden grade by subtraction. The total now follows the same rules as the core grade reports for viewers who may not see hidden grades:
+  - "Hide totals if they contain hidden items" (the Moodle default): the total shows as Hidden.
+  - "Show totals excluding hidden items": the total is recalculated without the hidden items.
+  - "Show real totals": unchanged.
+  - If the user report and overview report settings differ, the stricter one applies. Teachers and others who hold `moodle/grade:viewhidden` still see the real total.
+  - Affects every earlier release (0.1.0 to 0.4.1); upgrading is recommended.
+- The privacy reason string now mentions that report views are recorded in the standard log.
+
 ## 0.4.1 (2026-10-25) - beta
 
 - Security hardening: the course page (Student summaries, all students) now loads only the user columns it needs (name, picture, status) instead of the whole user row, so password hashes and other unused fields are never read into memory.
