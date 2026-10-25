@@ -458,3 +458,15 @@ moodle-plugin-ci (5.3 tree) phplint, phpmd, phpcs --max-warnings 0: clean
 ```
 - Not re-run for 0.4.2: validate, mustache, phpdoc, grunt, print checks (no template, docblock-structure, JS or CSS change). No Behat scenario for the hidden-total rule (hidden grade items are impractical to set up in Behat); PHPUnit covers it.
 - Still open from the audit: filter form puts `sesskey` in the URL (and in the printed page footer); course page logs no per-student event; the walk-through and README text for step 19 should be re-read against the new behaviour.
+
+## 0.4.3: all-hidden total leak and sesskey in the address (2026-10-25)
+Version 2026102502, release 0.4.3, zip `dist/report_studentsummary_2026102502.zip`.
+- 0.4.2's hidden-total fix used `isset()`/`??` on core's `get_hiding_affected()` result, so a total whose every item is hidden (recalculated to null) fell back to the real total. Found by the automated review of the 0.4.2 commit; reproduced with a failing PHPUnit test (a student with one hidden graded item saw a graded total), fixed with `array_key_exists()` as core does. Grade-total tests moved to `tests/local/course_total_test.php`.
+- The date filter was a GET moodleform, so Apply put `sesskey` and `_qf__...` in the address, history and (with browser headers/footers on) the printed page footer. It is now posted and redirected to a clean address (`fromts`/`tots`, plus group, perpage on the course page); `filter_form::range_params()` / `range_defaults()`. The viewed-event is logged after the redirect. Printed footer re-checked on 5.3 (Chrome `Page.printToPDF` with header/footer on): no `sesskey`, no `_qf__`.
+```
+phpunit --fail-on-warning   4.5.15, 5.1.8+, 5.2.4+, 5.3+: OK, 65 tests, 379 assertions (4.5: 2 risky, core PHP 8.4 deprecation output)
+behat @report_studentsummary 4.5.15, 5.1.8+, 5.2.4+, 5.3+: 19 scenarios (19 passed), 143 steps each (new step: the current URL should not contain "...")
+moodle-plugin-ci (5.3 tree) phplint, phpmd, phpcs --max-warnings 0: clean
+```
+- Not re-run for 0.4.3: validate, mustache, phpdoc, grunt, the print-to-A4 page-count checks (no template, docblock-structure, JS or CSS change).
+- Still open from the 0.4.1 audit: per-student view events on the course page (LOW), duplicated per-student queries (LOW), `course.php` course lookup before login (LOW), `lib.php` MOODLE_INTERNAL guard (LOW); the walk-through still says 0.4.1 and its step 19 / the README sentence should be re-read against the new grade behaviour.

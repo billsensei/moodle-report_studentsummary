@@ -24,11 +24,11 @@ Use the **Print** button, or the browser's print dialog. The page prints on one 
 
 ## Requirements
 
-Moodle 4.5 or later. Release 0.4.2 was tested on 4.5.15, 5.1.8, 5.2.4 and 5.3 (earlier releases also on 5.0.11).
+Moodle 4.5 or later. Release 0.4.3 was tested on 4.5.15, 5.1.8, 5.2.4 and 5.3 (earlier releases also on 5.0.11).
 
 ## Installation
 
-Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.4.2](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.4.2), beta). It contains one folder, `studentsummary`.
+Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.4.3](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.4.3), beta). It contains one folder, `studentsummary`.
 
 Unpack it into `report/` (Moodle 4.5) or `public/report/` (Moodle 5.1 and later), so the plugin ends up in `report/studentsummary`, then visit **Site administration > Notifications**, or run `php admin/cli/upgrade.php`.
 

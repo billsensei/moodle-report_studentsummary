@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.3 (2026-10-25) - beta
+
+- **Security fix:** 0.4.2 still showed the real course total when every graded item behind it was hidden from the student. The total is now withheld (or shown as empty) in that case too, matching the core grade reports. Upgrading from 0.4.2 or earlier is recommended.
+- The date filter no longer puts the session key in the address. The form is posted and then redirected to a clean address carrying only the dates (and the group and page size on the course page), so the key no longer appears in the address bar, browser history or the footer of a printed page.
+
 ## 0.4.2 (2026-10-25) - beta
 
 - **Security fix:** the Current grades box showed a student the real course total even when it included grade items hidden from them, so a student could work out a hidden grade by subtraction. The total now follows the same rules as the core grade reports for viewers who may not see hidden grades:

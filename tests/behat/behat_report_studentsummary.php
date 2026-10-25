@@ -53,4 +53,20 @@ class behat_report_studentsummary extends behat_base {
                 throw new Exception('Unrecognised report_studentsummary page type "' . $type . '".');
         }
     }
+
+    /**
+     * Checks that the current address does not contain the given text.
+     *
+     * @Then /^the current URL should not contain "(?P<text_string>[^"]*)"$/
+     * @param string $text Text that must be absent.
+     */
+    public function the_current_url_should_not_contain(string $text): void {
+        $url = $this->getSession()->getCurrentUrl();
+        if (stripos($url, $text) !== false) {
+            throw new \Behat\Mink\Exception\ExpectationException(
+                "The current URL '$url' contains '$text'",
+                $this->getSession()
+            );
+        }
+    }
 }

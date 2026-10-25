@@ -141,19 +141,40 @@ class course_grades {
         $courseitem = \grade_item::fetch_course_item($course->id);
         $affected = self::get_hiding_affected($userid, $course->id);
         $id = $courseitem->id;
-        $recalculated = $affected['altered'][$id] ?? $affected['unknowngrades'][$id] ?? null;
-        $boundschanged = isset($affected['alteredgrademin'][$id]) || isset($affected['alteredgrademax'][$id]);
-        if ($recalculated === null && !$boundschanged) {
+        [$regraded, $boundschanged] = self::depends_on_hidden($affected, $id);
+        if (!$regraded && !$boundschanged) {
             return $shown;
         }
-        if ($recalculated === null || $mode == GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN) {
+        if ($regraded && $mode == GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN) {
             return null;
         }
-        $shown['grade'] = (float)$recalculated;
+        if ($regraded) {
+            $shown['grade'] = $affected['altered'][$id] ?? $affected['unknowngrades'][$id] ?? null;
+            if ($shown['grade'] === null) {
+                return null;
+            }
+            $shown['grade'] = (float)$shown['grade'];
+        }
         $shown['grademin'] = (float)($affected['alteredgrademin'][$id] ?? $shown['grademin']);
         $shown['grademax'] = (float)($affected['alteredgrademax'][$id] ?? $shown['grademax']);
         $shown['display'] = grade_format_gradevalue($shown['grade'], $courseitem, true);
         return $shown;
+    }
+
+    /**
+     * Whether an item's grade or bounds depend on hidden items.
+     *
+     * Tests for the key, not the value: a total whose every item is hidden is recalculated to null.
+     *
+     * @param array $affected The result of {@see \grade_grade::get_hiding_affected()}.
+     * @param int $itemid Grade item id.
+     * @return bool[] Whether the grade is recalculated, and whether only its bounds change.
+     */
+    private static function depends_on_hidden(array $affected, int $itemid): array {
+        return [
+            array_key_exists($itemid, $affected['altered']) || array_key_exists($itemid, $affected['unknowngrades']),
+            array_key_exists($itemid, $affected['alteredgrademin']) || array_key_exists($itemid, $affected['alteredgrademax']),
+        ];
     }
 
     /**

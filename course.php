@@ -55,28 +55,22 @@ $PAGE->set_heading(format_string($course->fullname, true, ['context' => $context
 // The group menu redirects on change, so it is resolved before anything is printed.
 $groupid = groups_get_course_group($course, true);
 
+// The filter is posted (so the session key never appears in the address bar, history or a printed footer),
+// then redirected to a clean address that carries only the filters.
 $mform = new \report_studentsummary\form\filter_form(
     $PAGE->url,
-    ['id' => $course->id, 'group' => $groupid, 'perpage' => $perpage],
-    'get'
+    ['id' => $course->id, 'group' => $groupid, 'perpage' => $perpage]
 );
-if ($formdata = $mform->get_data()) {
-    $from = (int)$formdata->from;
-    $to = $formdata->to ? (int)$formdata->to + DAYSECS - 1 : 0; // Include the whole end day.
-    $page = 0;
-} else if ($from || $to) {
-    $mform->set_data(['from' => $from, 'to' => $to ? $to - DAYSECS + 1 : 0]);
-}
-
 $baseurl = new moodle_url($PAGE->url, ['perpage' => $perpage]);
-if ($from) {
-    $baseurl->param('fromts', $from);
-}
-if ($to) {
-    $baseurl->param('tots', $to);
-}
 if ($groupid) {
     $baseurl->param('group', $groupid);
+}
+if ($formdata = $mform->get_data()) {
+    redirect(new moodle_url($baseurl, \report_studentsummary\form\filter_form::range_params($formdata)));
+}
+if ($from || $to) {
+    $mform->set_data(\report_studentsummary\form\filter_form::range_defaults($from, $to));
+    $baseurl->params(['fromts' => $from ?: null, 'tots' => $to ?: null]);
 }
 
 $report = new course_report_page($course, (int)$USER->id, $baseurl, $groupid, $from ?: null, $to ?: null, $page, $perpage);

@@ -62,6 +62,9 @@ Feature: A student views their own summary report
     And I press "Apply"
     Then I should see "Date range"
     And I should see "Student summary for Student One"
+    And the current URL should not contain "sesskey"
+    And the current URL should not contain "_qf__"
+    And the field "id_from_enabled" matches value "1"
 
   Scenario: An end date before the start date is rejected
     Given I am on the "student1" "user > profile" page logged in as student1

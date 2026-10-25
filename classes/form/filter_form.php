@@ -54,6 +54,30 @@ class filter_form extends \moodleform {
     }
 
     /**
+     * The address parameters for a submitted range (the end date covers the whole day).
+     *
+     * @param \stdClass $formdata Submitted data.
+     * @return array fromts and tots, omitted when empty.
+     */
+    public static function range_params(\stdClass $formdata): array {
+        return [
+            'fromts' => empty($formdata->from) ? null : (int)$formdata->from,
+            'tots' => empty($formdata->to) ? null : (int)$formdata->to + DAYSECS - 1,
+        ];
+    }
+
+    /**
+     * Form values for a range taken from the address.
+     *
+     * @param int $from Start timestamp, 0 for none.
+     * @param int $to End timestamp (end of the last day), 0 for none.
+     * @return array
+     */
+    public static function range_defaults(int $from, int $to): array {
+        return ['from' => $from, 'to' => $to ? $to - DAYSECS + 1 : 0];
+    }
+
+    /**
      * The end date must not be before the start date.
      *
      * @param array $data Submitted data.

@@ -38,10 +38,41 @@ final class filter_form_test extends \advanced_testcase {
      */
     public function test_validation(): void {
         $this->resetAfterTest();
-        $form = new filter_form(null, ['userid' => 2], 'get');
+        $form = new filter_form(null, ['userid' => 2]);
         $this->assertArrayHasKey('to', $form->validation(['from' => 2000, 'to' => 1000], []));
         $this->assertSame([], $form->validation(['from' => 1000, 'to' => 2000], []));
         $this->assertSame([], $form->validation(['from' => 0, 'to' => 1000], []));
+    }
+
+    /**
+     * The filter is posted, so the session key never goes into the address bar, history or a printed footer.
+     */
+    public function test_form_is_posted(): void {
+        $this->resetAfterTest();
+        $html = (new filter_form('/report/studentsummary/index.php', ['userid' => 2]))->render();
+        $this->assertStringContainsString('method="post"', $html);
+        $this->assertStringNotContainsString('method="get"', $html);
+    }
+
+    /**
+     * A submitted range becomes clean address parameters, with the end date covering the whole day.
+     */
+    public function test_range_params(): void {
+        $this->assertSame(
+            ['fromts' => 1000, 'tots' => 5000 + DAYSECS - 1],
+            filter_form::range_params((object)['from' => 1000, 'to' => 5000])
+        );
+        $this->assertSame(['fromts' => null, 'tots' => null], filter_form::range_params((object)['from' => 0, 'to' => 0]));
+        $this->assertSame(['fromts' => 1000, 'tots' => null], filter_form::range_params((object)['from' => 1000]));
+    }
+
+    /**
+     * Address parameters give back the form values the user chose.
+     */
+    public function test_range_defaults_round_trip(): void {
+        $params = filter_form::range_params((object)['from' => 1000, 'to' => 5000]);
+        $this->assertSame(['from' => 1000, 'to' => 5000], filter_form::range_defaults($params['fromts'], $params['tots']));
+        $this->assertSame(['from' => 0, 'to' => 0], filter_form::range_defaults(0, 0));
     }
 
     /**
