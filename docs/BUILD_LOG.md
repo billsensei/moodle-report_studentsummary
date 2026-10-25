@@ -427,3 +427,12 @@ moodle-plugin-ci (MOODLE_DIR=moodle52) phplint, phpmd, phpcs --max-warnings 0, v
 ```
 - Not run on 5.2: phpdoc, grunt (`npm ci` not done in this tree), the print-to-A4 check and the 60-student class.
 - `moodle` DB user needed `GRANT ALL` on `moodle52` by the MariaDB root user (socket `/home/bill/.local/var/mariadb/mysqld.sock`).
+
+## Moodle 5.3 check, release 0.4.1 (2026-10-25)
+New tree `/home/bill/test2/moodle53`: `git clone --depth 1 -b MOODLE_503_STABLE`, release `5.3+ (Build: 20261021)`, PHP 8.4.26 (5.3 needs PHP 8.3+), MariaDB 11.8.6, database `moodle53` (port 3307, prefixes `mdl_`/`phpu_`/`bht_`), data roots `/home/bill/test/m53*`, Behat site on :8010. Set up as for 5.2 (composer from `moodle51/composer.phar`, `GRANT ALL` by the MariaDB root user, plugin copied with rsync and installed by `admin/cli/upgrade.php` without errors).
+```
+phpunit --fail-on-warning   OK, 56 tests, 350 assertions, 12 PHPUnit deprecations (the @covers notes)
+behat @report_studentsummary 19 scenarios (19 passed), 140 steps (140 passed)
+moodle-plugin-ci (MOODLE_DIR=moodle53) phplint, phpmd, phpcs --max-warnings 0, validate, mustache, savepoints: clean
+```
+- Not run on 5.3: phpdoc, grunt, the print-to-A4 check and the 60-student class.
