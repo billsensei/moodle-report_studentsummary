@@ -497,3 +497,6 @@ behat @report_studentsummary 4.5, 5.3 re-run: 19 scenarios (19 passed), 143 step
 phplint, phpmd, phpcs --max-warnings 0, validate (5.3 tree): clean
 ```
 The same code (before the version bump) passed PHPUnit and Behat on 5.1 and 5.2 as well; those two trees were not re-run after the bump. Not re-run: mustache, phpdoc, print page-count checks. The walk-through still describes 0.4.3.
+
+### Walk-through updated for 0.4.4 (2026-10-25)
+`/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (35 pages) now describe release 0.4.4 (version 2026102503). Step 1 was retaken (shows 0.4.4); cover, install page, summary and quality table updated. The quality table lists PHPUnit and Behat as also passing on 5.2.4+ and 5.3+ (run on the same code; 5.1 and 5.2 were not re-run after the version bump). Source: `dist/walkthrough51/walkthru.html`.
