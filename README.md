@@ -28,6 +28,11 @@ Use the **Print** button, or the browser's print dialog. The page prints on one 
 
 Moodle 4.5 or later. Release 0.4.5 was tested on 4.5.15, 5.0.11, 5.1.8 and 5.3 (0.4.4 also on 5.2.4).
 
+Test results for 0.4.5, on each of those four versions:
+
+- PHPUnit: 65 tests, 379 assertions, all passing. Moodle 4.5.15 reports 2 risky tests (PHP 8.4 deprecation output from core, not from the plugin); 5.0.11, 5.1.8 and 5.3 report 13 PHPUnit deprecations.
+- Behat: 20 scenarios, 151 steps, all passing.
+
 ## Installation
 
 Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.4.5](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.4.5), beta). It contains one folder, `studentsummary`.
