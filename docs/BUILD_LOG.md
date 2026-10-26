@@ -500,3 +500,17 @@ The same code (before the version bump) passed PHPUnit and Behat on 5.1 and 5.2 
 
 ### Walk-through updated for 0.4.4 (2026-10-25)
 `/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (35 pages) now describe release 0.4.4 (version 2026102503). Step 1 was retaken (shows 0.4.4); cover, install page, summary and quality table updated. The quality table lists PHPUnit and Behat as also passing on 5.2.4+ and 5.3+ (run on the same code; 5.1 and 5.2 were not re-run after the version bump). Source: `dist/walkthrough51/walkthru.html`.
+
+## Release 0.4.5 (2026-10-26)
+Version 2026102504, release 0.4.5: on Moodle 5.3+ the course page toolbar (select all, selected count, Print selected) is a React component (`js/esm/src/Toolbar.tsx`) using core's React and `@moodlehq/design-system`, mounted with `html_writer::react_component`; `course_report_page::react_toolbar()` falls back to the Bootstrap toolbar when `core\output\react_component_renderable` or `js/esm/build/Toolbar.js` is missing. `course.js` talks to the component with document events. Zip `dist/report_studentsummary_2026102504.zip`, tag `v0.4.5` (commit 5bc93bd), GitHub pre-release. README commits after the tag are not in the zip.
+```
+                              4.5.15   5.0.11   5.1.8+   5.2.4+   5.3+
+phpunit --fail-on-warning     65/379   65/379   65/379   65/379   65/379   (4.5: 2 risky, core PHP 8.4 output; others: 13 PHPUnit deprecations)
+behat @report_studentsummary  20/151   20/151   20/151   20/151   20/151   (React toolbar loaded on 5.3 only; fallback elsewhere)
+upgrade.php                   ok       ok       ok       ok       ok
+phpcs --max-warnings 0 (5.3 tree, 37 files): clean
+```
+Not run for 0.4.5: mustache, phpdoc, print page-count checks, a visual check of the React toolbar in a browser. Behat and PHPUnit sites were re-initialised in each tree after the version bump. Retagging v0.4.5 was declined, so the tag keeps the older README.
+
+### Walk-through updated for 0.4.5 (2026-10-26)
+`/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (35 pages) now describe release 0.4.5 (version 2026102504). Step 1 was retaken as admin on the 5.1 site (admin password reset to a throwaway value with `admin/cli/reset_password.php` for the demo site); cover, install page, quality table (20 scenarios, 151 steps, also 5.0, 5.2, 5.3) and closing note updated, and a cover row notes the 5.3 toolbar. Steps 24 to 27 are unchanged: the 5.1 site uses the fallback toolbar. The 0.4.4 version is kept as `dist/walkthrough51/walk-thru-0.4.4.pdf`. Source: `dist/walkthrough51/walkthru.html` (previous: `walkthru.html.bak-0.4.4`).
