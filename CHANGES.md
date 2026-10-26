@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.5 (2026-10-26) - beta
+
+- On Moodle 5.3 and later, the toolbar on the course page (Student summaries, all students) is drawn with the Moodle Design System: the Select all checkbox and the Print selected button are design system components, mounted by core's React support. The plugin ships its own build in `js/esm/build`, and uses core's copy of React and the design system.
+- On Moodle 4.5 to 5.2, or if the build is missing, the page shows the previous Bootstrap toolbar. Nothing changes in how selecting and printing work.
+- New Behat scenario for Select all.
+- `tools/deploy.sh` also copies the plugin into the 5.3 tree and skips `node_modules`.
+- No database changes, so there is no upgrade step.
+
 ## 0.4.4 (2026-10-25) - beta
 
 - The course page (Student summaries, all students) now logs a `report_viewed` event for each student shown, so a search of the log for who viewed a student's report also finds views from the course page.
