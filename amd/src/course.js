@@ -30,6 +30,24 @@ const SELECT = '[data-action="report_studentsummary-select"]';
 const SELECTALL = '[data-action="report_studentsummary-selectall"]';
 const COUNT = '[data-region="report_studentsummary-selectedcount"]';
 
+// Events shared with the React toolbar (js/esm/src/Toolbar.tsx), used where it replaces the Bootstrap one.
+const EVENT_STATE = 'report_studentsummary:state';
+const EVENT_READY = 'report_studentsummary:toolbarready';
+const EVENT_TOGGLEALL = 'report_studentsummary:toggleall';
+const EVENT_PRINT = 'report_studentsummary:printselected';
+
+/** @type {?Object} Last selection state sent to the React toolbar, which may mount after the first refresh. */
+let toolbarState = null;
+
+/**
+ * Tell the React toolbar, if there is one, what is selected.
+ */
+const sendState = () => {
+    if (toolbarState) {
+        document.dispatchEvent(new CustomEvent(EVENT_STATE, {detail: toolbarState}));
+    }
+};
+
 /**
  * Mark the first sheet that will print, so it does not start with a page break (which would leave page one blank).
  *
@@ -57,10 +75,18 @@ const refresh = async(root) => {
     });
     const all = root.querySelector(SELECTALL);
     markFirst(boxes.filter((box) => box.checked).map((box) => box.closest(SHEET)), root);
-    all.checked = selected === boxes.length;
-    all.indeterminate = selected > 0 && selected < boxes.length;
-    root.querySelector(COUNT).textContent = await getString(
-        'selectedcount', 'report_studentsummary', {selected, total: boxes.length});
+    const counttext = await getString('selectedcount', 'report_studentsummary', {selected, total: boxes.length});
+    toolbarState = {
+        checked: selected === boxes.length,
+        indeterminate: selected > 0 && selected < boxes.length,
+        counttext,
+    };
+    if (all) {
+        all.checked = toolbarState.checked;
+        all.indeterminate = toolbarState.indeterminate;
+        root.querySelector(COUNT).textContent = counttext;
+    }
+    sendState();
 };
 
 /**
@@ -99,16 +125,23 @@ export const init = () => {
     if (!root) {
         return;
     }
+    const selectAll = (checked) => {
+        root.querySelectorAll(SELECT).forEach((box) => {
+            box.checked = checked;
+        });
+        update(root);
+    };
+    const printSelected = () => printSheets([...root.querySelectorAll(SHEET + ':not(.ss-unselected)')]);
     root.addEventListener('change', (e) => {
         if (e.target.matches(SELECTALL)) {
-            root.querySelectorAll(SELECT).forEach((box) => {
-                box.checked = e.target.checked;
-            });
-        }
-        if (e.target.matches(SELECT) || e.target.matches(SELECTALL)) {
+            selectAll(e.target.checked);
+        } else if (e.target.matches(SELECT)) {
             update(root);
         }
     });
+    document.addEventListener(EVENT_READY, sendState);
+    document.addEventListener(EVENT_TOGGLEALL, (e) => selectAll(e.detail.checked));
+    document.addEventListener(EVENT_PRINT, printSelected);
     root.addEventListener('click', (e) => {
         const one = e.target.closest('[data-action="report_studentsummary-printone"]');
         if (one) {
@@ -118,7 +151,7 @@ export const init = () => {
         }
         if (e.target.closest('[data-action="report_studentsummary-printselected"]')) {
             e.preventDefault();
-            printSheets([...root.querySelectorAll(SHEET + ':not(.ss-unselected)')]);
+            printSelected();
         }
     });
     update(root);

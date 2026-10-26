@@ -62,3 +62,11 @@ Feature: Student summaries of a whole course
     And I should see "2 of 2 selected"
     When I click on "Print Ben Brown" "checkbox"
     Then I should see "1 of 2 selected"
+
+  @javascript
+  Scenario: Select all clears and restores the whole selection
+    Given I am on the "CA" "report_studentsummary > course" page logged in as teacher1
+    When I click on "Select all" "checkbox"
+    Then I should see "0 of 2 selected"
+    And I click on "Select all" "checkbox"
+    And I should see "2 of 2 selected"

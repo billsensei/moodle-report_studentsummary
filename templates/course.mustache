@@ -23,12 +23,14 @@
     * hasstudents, students (id, fullname, selectlabel, summary - see report_studentsummary/summary)
     * count - Number of students in total (all pages)
     * pagingbar - Pre-rendered paging bar HTML, may be empty
+    * reacttoolbar - Mount point of the React toolbar (Moodle 5.3+), empty to use the Bootstrap toolbar
 
     Example context (json):
     {
         "hasstudents": true,
         "count": 1,
         "pagingbar": "",
+        "reacttoolbar": "",
         "students": [{
             "id": 7,
             "fullname": "Ada Lovelace",
@@ -56,6 +58,10 @@
 }}
 <div class="report-studentsummary-course" data-region="report_studentsummary-course">
     {{#hasstudents}}
+    {{#reacttoolbar}}
+    <div class="ss-noprint mb-3">{{{reacttoolbar}}}</div>
+    {{/reacttoolbar}}
+    {{^reacttoolbar}}
     <div class="ss-noprint d-flex flex-wrap align-items-center gap-3 mb-3">
         <div class="form-check mb-0">
             <input class="form-check-input" type="checkbox" id="ss-select-all" data-action="report_studentsummary-selectall" checked>
@@ -64,6 +70,7 @@
         <span class="text-muted" data-region="report_studentsummary-selectedcount" aria-live="polite"></span>
         <button type="button" class="btn btn-primary ms-auto" data-action="report_studentsummary-printselected">{{#str}} printselected, report_studentsummary {{/str}}</button>
     </div>
+    {{/reacttoolbar}}
     {{/hasstudents}}
     {{^hasstudents}}
     <p class="ss-noprint alert alert-info">{{#str}} nostudents, report_studentsummary {{/str}}</p>

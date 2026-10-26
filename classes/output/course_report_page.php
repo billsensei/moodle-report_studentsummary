@@ -104,6 +104,27 @@ class course_report_page implements \renderable, \templatable {
     }
 
     /**
+     * The selection toolbar as a React component, or an empty string where core cannot render it.
+     *
+     * Moodle 5.3 and later provide React, the design system and a build for plugin components. Elsewhere, or until
+     * js/esm has been built, the template falls back to its plain Bootstrap toolbar.
+     *
+     * @return string HTML of the mount point.
+     */
+    private static function react_toolbar(): string {
+        if (
+            !interface_exists(\core\output\react_component_renderable::class) ||
+            !file_exists(__DIR__ . '/../../js/esm/build/Toolbar.js')
+        ) {
+            return '';
+        }
+        return \html_writer::react_component('@moodle/lms/report_studentsummary/Toolbar', [
+            'selectalllabel' => get_string('selectall', 'report_studentsummary'),
+            'printlabel' => get_string('printselected', 'report_studentsummary'),
+        ]);
+    }
+
+    /**
      * Export data for the course template.
      *
      * @param \renderer_base $output The renderer.
@@ -123,6 +144,7 @@ class course_report_page implements \renderable, \templatable {
             ];
         }
         $data->hasstudents = !empty($data->students);
+        $data->reacttoolbar = $data->hasstudents ? self::react_toolbar() : '';
         $data->pagingbar = $data->count > $this->perpage ?
             $output->render(new \paging_bar($data->count, $this->page, $this->perpage, $this->baseurl)) : '';
         return $data;
