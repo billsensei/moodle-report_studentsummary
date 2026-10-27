@@ -73,6 +73,7 @@ if ($from || $to) {
 $page = new \report_studentsummary\output\report_page($user, (int)$USER->id, $from ?: null, $to ?: null);
 
 echo $OUTPUT->header();
+echo report_studentsummary_settings_link();
 echo html_writer::div($mform->render(), 'ss-noprint');
 echo $PAGE->get_renderer('report_studentsummary')->render($page);
 echo $OUTPUT->footer();

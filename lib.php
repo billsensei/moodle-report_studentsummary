@@ -63,6 +63,24 @@ function report_studentsummary_can_view(stdClass $user): bool {
 }
 
 /**
+ * A "Plugin settings" link for administrators, or an empty string for everyone else.
+ *
+ * Core does not show a Settings link for report plugins on the Plugins overview page, so the report offers one.
+ *
+ * @return string HTML, hidden when printing.
+ */
+function report_studentsummary_settings_link(): string {
+    if (!has_capability('moodle/site:config', context_system::instance())) {
+        return '';
+    }
+    $url = new moodle_url('/admin/settings.php', ['section' => 'reportstudentsummary']);
+    return html_writer::div(
+        html_writer::link($url, get_string('settingslink', 'report_studentsummary')),
+        'ss-noprint text-end mb-2'
+    );
+}
+
+/**
  * Add a "Student summaries" link to the course Reports page for teachers.
  *
  * @param navigation_node $navigation The Reports navigation node of the course.

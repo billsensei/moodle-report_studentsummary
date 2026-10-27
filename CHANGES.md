@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.6 (2026-10-27) - beta
+
+- Administrators (`moodle/site:config`) see a "Plugin settings" link at the top of the single-student and course pages. Core shows no Settings link for report plugins on the Plugins overview page. The link is hidden when printing.
+- README gives the direct address of the settings page.
+- No database changes, so there is no upgrade step.
+
 ## 0.4.5 (2026-10-26) - beta
 
 - On Moodle 5.3 and later, the toolbar on the course page (Student summaries, all students) is drawn with the Moodle Design System: the Select all checkbox and the Print selected button are design system components, mounted by core's React support. The plugin ships its own build in `js/esm/build`, and uses core's copy of React and the design system.

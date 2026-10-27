@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'report_studentsummary';
-$plugin->version = 2026102504;
+$plugin->version = 2026102701;
 $plugin->requires = 2024100700; // Moodle 4.5.
 $plugin->supported = [405, 503]; // Moodle 4.5 to 5.3.
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '0.4.5';
+$plugin->release = '0.4.6';

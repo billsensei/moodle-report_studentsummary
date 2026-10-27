@@ -90,6 +90,7 @@ $string['resourcetypes'] = 'Resource types';
 $string['selectall'] = 'Select all';
 $string['selectedcount'] = '{$a->selected} of {$a->total} selected';
 $string['selectstudent'] = 'Print {$a}';
+$string['settingslink'] = 'Plugin settings';
 $string['showtime'] = 'Show time spent';
 $string['showtime_desc'] = 'Display the estimated time spent. The estimate is based on the standard log store.';
 $string['studentsummariesfor'] = 'Student summaries: {$a}';

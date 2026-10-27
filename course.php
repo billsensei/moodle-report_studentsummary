@@ -87,6 +87,7 @@ foreach ($report->get_page_students() as $student) {
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($title, 3, 'ss-noprint');
+echo report_studentsummary_settings_link();
 echo html_writer::start_div('ss-noprint');
 groups_print_course_menu($course, $PAGE->url);
 echo $mform->render();

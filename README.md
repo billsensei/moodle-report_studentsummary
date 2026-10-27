@@ -26,9 +26,9 @@ Use the **Print** button, or the browser's print dialog. The page prints on one 
 
 ## Requirements
 
-Moodle 4.5 or later. Release 0.4.5 was tested on 4.5.15, 5.0.11, 5.1.8, 5.2.4 and 5.3.
+Moodle 4.5 or later. Release 0.4.6 was tested on 4.5.15, 5.0.11, 5.1.8, 5.2.4 and 5.3.
 
-Test results for 0.4.5, on each of those five versions:
+Test results for 0.4.6, on each of those five versions:
 
 - PHPUnit: 65 tests, 379 assertions, all passing. Moodle 4.5.15 reports 2 risky tests (PHP 8.4 deprecation output from core, not from the plugin); 5.0.11, 5.1.8, 5.2.4 and 5.3 report 13 PHPUnit deprecations.
 - Behat: 20 scenarios, 151 steps, all passing.
@@ -57,7 +57,7 @@ The report is entered from the user's profile (Reports section) or **Site admini
 
 ## Settings
 
-Under **Site administration > Plugins > Reports > Student summary**:
+Under **Site administration > Plugins > Reports > Student summary** (direct address: `/admin/settings.php?section=reportstudentsummary`). Moodle does not show a Settings link for report plugins on the Plugins overview page, so administrators also get a **Plugin settings** link at the top of the report pages:
 
 | Setting | Default | Purpose |
 |---------|---------|---------|

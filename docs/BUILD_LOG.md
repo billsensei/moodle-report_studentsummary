@@ -514,3 +514,13 @@ Not run for 0.4.5: mustache, phpdoc, print page-count checks, a visual check of 
 
 ### Walk-through updated for 0.4.5 (2026-10-26)
 `/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (36 pages) now describe release 0.4.5 (version 2026102504). Step 1 was retaken as admin on the 5.1 site (admin password reset to a throwaway value with `admin/cli/reset_password.php` for the demo site); cover, install page, quality table (20 scenarios, 151 steps, also 5.0, 5.2, 5.3) and closing note updated, and a cover row notes the 5.3 toolbar. Steps 24 to 27 are unchanged: the 5.1 site uses the fallback toolbar. New step 28 (`28-toolbar-react-53.png`, headless Chrome as admin on the 5.3 demo site, served on :8009, course BIO101 with 5 students) shows the React toolbar; its admin password was also reset to a throwaway value with `reset_password.php`. Step 28 is the only screenshot not taken on 5.1. The 0.4.4 version is kept as `dist/walkthrough51/walk-thru-0.4.4.pdf`. Source: `dist/walkthrough51/walkthru.html` (previous: `walkthru.html.bak-0.4.4`).
+
+## Release 0.4.6 (2026-10-27)
+Version 2026102701, release 0.4.6: administrators (`moodle/site:config`) get a "Plugin settings" link at the top of `index.php` and `course.php` (`report_studentsummary_settings_link()` in `lib.php`), because core's `plugininfo\report` gives report plugins no Settings link on the Plugins overview page. No database changes.
+```
+                              4.5.15   5.0.11   5.1.8+   5.2.4+   5.3+
+phpunit --fail-on-warning     65/379   65/379   65/379   65/379   65/379   (4.5: 2 risky, core PHP 8.4 output; others: 13 PHPUnit deprecations)
+behat @report_studentsummary  20/151   20/151   20/151   20/151   20/151
+upgrade.php                   ok       ok       ok       ok       ok
+```
+PHPUnit and Behat environments were re-initialised in each tree after the version bump. Not run: phpcs, mustache, phpdoc, print page-count checks. Behat has no scenario for the new link.
