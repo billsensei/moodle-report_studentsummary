@@ -547,3 +547,6 @@ behat @report_studentsummary  22/179   22/179   22/179   22/179   22/179
 upgrade.php                   ok       ok       ok       ok       ok
 ```
 PHPUnit and Behat environments re-initialised after the version bump. Not run: phpcs, stylelint, mustache, phpdoc, print page-count checks. The walk-through still describes 0.5.0 and shows the old spacing in steps 24 and 29.
+
+### Walk-through updated for 0.5.1 (2026-10-28)
+`/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (38 pages) now describe release 0.5.1 (version 2026102801; files identical to `dist/report_studentsummary_2026102801.zip`). Steps 1, 24 and 29 were retaken on the 5.1 demo site (:8005, same headless Chrome client as for 0.5.0; step 1 shows 0.5.1 and 2026102801, steps 24 and 29 show the evenly spaced course tick boxes). Step 29's caption and the limitations no longer mention the uneven spacing; the other limitation about the course list being built from the students on the current page stays. Cover, install page, quality heading and footer say 0.5.1 (test figures unchanged: PHPUnit 70 / 399, Behat 22 / 179). Steps 8 and 30 are the 0.5.0 screenshots (they do not show the tick list). The 0.5.0 version is kept as `dist/walkthrough51/walk-thru-0.5.0.pdf` (HTML: `walkthru.html.bak-0.5.0`). Source: `dist/walkthrough51/walkthru.html`.
