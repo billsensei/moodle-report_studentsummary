@@ -205,6 +205,12 @@
     }
 }
 
+/* Course tick boxes of the filter form: one per line (the form group wraps its labels in a flex row). */
+body.report-studentsummary-page #fgroup_id_courseboxes .form-check-inline {
+    flex: 0 0 100%;
+    margin-right: 0;
+}
+
 /* stylelint-disable csstree/validator -- named pages are newer than the validator. */
 /*
  * Named page: A4 portrait only for the report page, so printing other Moodle pages is not affected.

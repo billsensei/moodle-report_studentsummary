@@ -69,7 +69,7 @@ class filter_form extends \moodleform {
             foreach ($this->_customdata['courselist'] as $id => $name) {
                 $boxes[] = $mform->createElement('advcheckbox', self::BOXPREFIX . $id, '', $name);
             }
-            $mform->addGroup($boxes, 'courseboxes', get_string('coursestoinclude', 'report_studentsummary'), '<br>', false);
+            $mform->addGroup($boxes, 'courseboxes', get_string('coursestoinclude', 'report_studentsummary'), '', false);
             $mform->addElement('static', 'coursesnote', '', get_string('coursestoinclude_note', 'report_studentsummary'));
         }
         $mform->addElement('date_selector', 'from', get_string('datefrom', 'report_studentsummary'), ['optional' => true]);

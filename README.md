@@ -28,9 +28,9 @@ Use the **Print** button, or the browser's print dialog. The page prints on one 
 
 ## Requirements
 
-Moodle 4.5 or later. Release 0.5.0 was tested on 4.5.15, 5.0.11, 5.1.8, 5.2.4 and 5.3.
+Moodle 4.5 or later. Release 0.5.1 was tested on 4.5.15, 5.0.11, 5.1.8, 5.2.4 and 5.3.
 
-Test results for 0.5.0, on each of those five versions:
+Test results for 0.5.1, on each of those five versions:
 
 - PHPUnit: 70 tests, 399 assertions, all passing. Moodle 4.5.15 reports 2 risky tests (PHP 8.4 deprecation output from core, not from the plugin); 5.0.11, 5.1.8, 5.2.4 and 5.3 report 13 PHPUnit deprecations.
 - Behat: 22 scenarios, 179 steps, all passing.

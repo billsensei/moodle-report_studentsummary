@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1 (2026-10-28) - beta
+
+- The tick boxes of **Courses to include** on the course page (Student summaries, all students) are now evenly spaced, one course per line. In 0.5.0 the gaps between them varied.
+- No database changes, so there is no upgrade step.
+
 ## 0.5.0 (2026-10-27) - beta
 
 - Choose which courses go into a summary. On a single student's report, **Courses to include** limits every box (activities, resources, average grade, time, courses, current grades) to the chosen courses; empty means all. On the course page (all students), **Courses to include** is a list of courses with a tick box each, and limits every summary to the ticked courses.
