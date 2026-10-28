@@ -22,16 +22,18 @@ On this page "student" means an active (not suspended) enrolled user who holds `
 
 ### Single student
 
+Use **Courses to include** to leave courses out of the summary (empty means all courses). Every box then counts only the chosen courses, and time outside any course is left out. You can only narrow the report: a course you may not see stays out whatever is chosen. On the course page (all students), **Courses to include** is a list with a tick box per course (the courses of the students on the page that you may see); tick the ones to include in every summary, or none for all. The choice is kept in the address (`courseids[]`) so it carries over to paging and printing.
+
 Use the **Print** button, or the browser's print dialog. The page prints on one A4 portrait sheet with colours kept and navigation hidden. A start and end date can limit the time estimate; completion and grades are always current.
 
 ## Requirements
 
-Moodle 4.5 or later. Release 0.4.6 was tested on 4.5.15, 5.0.11, 5.1.8, 5.2.4 and 5.3.
+Moodle 4.5 or later. Release 0.5.0 was tested on 4.5.15, 5.0.11, 5.1.8, 5.2.4 and 5.3.
 
-Test results for 0.4.6, on each of those five versions:
+Test results for 0.5.0, on each of those five versions:
 
-- PHPUnit: 65 tests, 379 assertions, all passing. Moodle 4.5.15 reports 2 risky tests (PHP 8.4 deprecation output from core, not from the plugin); 5.0.11, 5.1.8, 5.2.4 and 5.3 report 13 PHPUnit deprecations.
-- Behat: 20 scenarios, 151 steps, all passing.
+- PHPUnit: 70 tests, 399 assertions, all passing. Moodle 4.5.15 reports 2 risky tests (PHP 8.4 deprecation output from core, not from the plugin); 5.0.11, 5.1.8, 5.2.4 and 5.3 report 13 PHPUnit deprecations.
+- Behat: 22 scenarios, 179 steps, all passing.
 
 ## Installation
 

@@ -53,6 +53,16 @@ Feature: A student views their own summary report
     Then I should see "No courses to show."
     And I should see "No courses to show."
 
+  @javascript
+  Scenario: The report can be limited to chosen courses
+    Given I am on the "student1" "user > profile" page logged in as student1
+    And I follow "Student summary"
+    When I set the field "Courses to include" to "Course A"
+    And I press "Apply"
+    Then I should see "Course A" in the ".ss-grid" "css_element"
+    And I should not see "Course B" in the ".ss-grid" "css_element"
+    And the current URL should not contain "sesskey"
+
   Scenario: The report applies a date range filter
     Given I am on the "student1" "user > profile" page logged in as student1
     And I follow "Student summary"

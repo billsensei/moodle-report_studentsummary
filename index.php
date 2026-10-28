@@ -28,6 +28,7 @@ require_once(__DIR__ . '/lib.php');
 $userid = optional_param('userid', 0, PARAM_INT);
 $from = optional_param('fromts', 0, PARAM_INT);
 $to = optional_param('tots', 0, PARAM_INT);
+$courseids = report_studentsummary_courseids_param();
 
 require_login(null, false);
 
@@ -57,12 +58,18 @@ $PAGE->set_heading($title);
 
 // The filter is posted (so the session key never appears in the address bar, history or a printed footer),
 // then redirected to a clean address that carries only the dates.
-$mform = new \report_studentsummary\form\filter_form($PAGE->url, ['userid' => $user->id]);
-if ($formdata = $mform->get_data()) {
-    redirect(new moodle_url($PAGE->url, \report_studentsummary\form\filter_form::range_params($formdata)));
+$choices = [];
+foreach (\report_studentsummary\local\access::get_courses($user, (int)$USER->id) as $course) {
+    $choices[$course->id] = format_string($course->fullname, true, ['context' => context_course::instance($course->id)]);
 }
-if ($from || $to) {
-    $mform->set_data(\report_studentsummary\form\filter_form::range_defaults($from, $to));
+$mform = new \report_studentsummary\form\filter_form($PAGE->url, ['userid' => $user->id, 'courses' => $choices]);
+if ($formdata = $mform->get_data()) {
+    redirect(new moodle_url($PAGE->url, \report_studentsummary\form\filter_form::range_params($formdata) +
+        \report_studentsummary\form\filter_form::courses_params($formdata)));
+}
+if ($from || $to || $courseids) {
+    $mform->set_data(\report_studentsummary\form\filter_form::range_defaults($from, $to) +
+        \report_studentsummary\form\filter_form::courses_defaults($courseids));
 }
 
 \report_studentsummary\event\report_viewed::create([
@@ -70,7 +77,7 @@ if ($from || $to) {
     'relateduserid' => $user->id,
 ])->trigger();
 
-$page = new \report_studentsummary\output\report_page($user, (int)$USER->id, $from ?: null, $to ?: null);
+$page = new \report_studentsummary\output\report_page($user, (int)$USER->id, $from ?: null, $to ?: null, '', $courseids ?: null);
 
 echo $OUTPUT->header();
 echo report_studentsummary_settings_link();

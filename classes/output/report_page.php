@@ -56,6 +56,8 @@ class report_page implements \renderable, \templatable {
     private $courses = [];
     /** @var string Prefix that keeps element ids unique when several reports share a page. */
     private $idprefix;
+    /** @var int[]|null Courses to include, null for every course the viewer may see. */
+    private $courseids;
 
     /**
      * Constructor.
@@ -65,13 +67,22 @@ class report_page implements \renderable, \templatable {
      * @param int|null $from Optional range start timestamp.
      * @param int|null $to Optional range end timestamp.
      * @param string $idprefix Prefix for element ids, needed when several reports are on one page.
+     * @param int[]|null $courseids Courses to include, null or empty for all. Courses the viewer may not see stay out.
      */
-    public function __construct(\stdClass $user, int $viewerid, ?int $from = null, ?int $to = null, string $idprefix = '') {
+    public function __construct(
+        \stdClass $user,
+        int $viewerid,
+        ?int $from = null,
+        ?int $to = null,
+        string $idprefix = '',
+        ?array $courseids = null
+    ) {
         $this->user = $user;
         $this->viewerid = $viewerid;
         $this->from = $from;
         $this->to = $to;
         $this->idprefix = preg_replace('/[^a-z0-9-]/i', '', $idprefix);
+        $this->courseids = $courseids ? array_map('intval', $courseids) : null;
     }
 
     /**
@@ -85,6 +96,10 @@ class report_page implements \renderable, \templatable {
 
         unset($output); // Part of the templatable signature.
         $courses = access::get_courses($this->user, $this->viewerid);
+        if ($this->courseids !== null) {
+            // Only narrows the list: a course the viewer may not see is already missing from it.
+            $courses = array_intersect_key($courses, array_flip($this->courseids));
+        }
         $this->courses = $courses;
         $completion = completion_summary::get_summary($this->user->id, $courses);
         $grades = grade_summary::get_summary($this->user->id, $courses, $this->viewerid);
@@ -299,7 +314,8 @@ class report_page implements \renderable, \templatable {
      */
     private function time_courseids(): array {
         $ids = array_map('intval', array_keys($this->courses));
-        if (access::can_view_site_activity($this->user, $this->viewerid)) {
+        // Time outside any course does not belong in a summary of chosen courses.
+        if ($this->courseids === null && access::can_view_site_activity($this->user, $this->viewerid)) {
             $ids[] = SITEID;
         }
         return $ids;

@@ -33,6 +33,7 @@ $page = optional_param('page', 0, PARAM_INT);
 $perpage = optional_param('perpage', course_report_page::DEFAULT_PERPAGE, PARAM_INT);
 $from = optional_param('fromts', 0, PARAM_INT);
 $to = optional_param('tots', 0, PARAM_INT);
+$courseids = report_studentsummary_courseids_param();
 
 require_login(); // Before the lookup, so a visitor who is not logged in learns nothing about course ids.
 $course = get_course($courseid);
@@ -58,23 +59,40 @@ $groupid = groups_get_course_group($course, true);
 
 // The filter is posted (so the session key never appears in the address bar, history or a printed footer),
 // then redirected to a clean address that carries only the filters.
-$mform = new \report_studentsummary\form\filter_form(
-    $PAGE->url,
-    ['id' => $course->id, 'group' => $groupid, 'perpage' => $perpage]
-);
 $baseurl = new moodle_url($PAGE->url, ['perpage' => $perpage]);
 if ($groupid) {
     $baseurl->param('group', $groupid);
 }
-if ($formdata = $mform->get_data()) {
-    redirect(new moodle_url($baseurl, \report_studentsummary\form\filter_form::range_params($formdata)));
-}
+$redirecturl = new moodle_url($baseurl);
 if ($from || $to) {
-    $mform->set_data(\report_studentsummary\form\filter_form::range_defaults($from, $to));
     $baseurl->params(['fromts' => $from ?: null, 'tots' => $to ?: null]);
 }
+$baseurl->params(\report_studentsummary\form\filter_form::courseids_url_params($courseids));
 
-$report = new course_report_page($course, (int)$USER->id, $baseurl, $groupid, $from ?: null, $to ?: null, $page, $perpage);
+$report = new course_report_page(
+    $course,
+    (int)$USER->id,
+    $baseurl,
+    $groupid,
+    $from ?: null,
+    $to ?: null,
+    $page,
+    $perpage,
+    $courseids ?: null
+);
+
+$mform = new \report_studentsummary\form\filter_form(
+    $PAGE->url,
+    ['id' => $course->id, 'group' => $groupid, 'perpage' => $perpage, 'courselist' => $report->get_course_choices()]
+);
+if ($formdata = $mform->get_data()) {
+    redirect(new moodle_url($redirecturl, \report_studentsummary\form\filter_form::range_params($formdata) +
+        \report_studentsummary\form\filter_form::courses_params($formdata)));
+}
+if ($from || $to || $courseids) {
+    $mform->set_data(\report_studentsummary\form\filter_form::range_defaults($from, $to) +
+        \report_studentsummary\form\filter_form::courses_defaults($courseids));
+}
 
 \report_studentsummary\event\course_report_viewed::create(['context' => $context])->trigger();
 // One event per student shown, so "who viewed this student's data" also finds views from the course page.

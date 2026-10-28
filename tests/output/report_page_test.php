@@ -74,6 +74,55 @@ final class report_page_test extends \advanced_testcase {
     }
 
     /**
+     * Only the chosen courses are summarised.
+     */
+    public function test_course_choice(): void {
+        global $PAGE;
+        $this->resetAfterTest();
+        $gen = $this->getDataGenerator();
+        $first = $gen->create_course(['fullname' => 'First course']);
+        $second = $gen->create_course(['fullname' => 'Second course']);
+        $user = $gen->create_and_enrol($first, 'student');
+        $gen->enrol_user($user->id, $second->id, 'student');
+        $this->setAdminUser();
+        $renderer = $PAGE->get_renderer('core');
+
+        $all = (new report_page($user, get_admin()->id))->export_for_template($renderer);
+        $this->assertSame(2, $all->coursecount);
+        $empty = (new report_page($user, get_admin()->id, null, null, '', []))->export_for_template($renderer);
+        $this->assertSame(2, $empty->coursecount);
+
+        $chosen = (new report_page($user, get_admin()->id, null, null, '', [(int)$second->id]))->export_for_template($renderer);
+        $this->assertSame(1, $chosen->coursecount);
+        $this->assertSame('Second course', $chosen->courses[0]['name']);
+        $this->assertSame('Second course', $chosen->grades[0]['name']);
+    }
+
+    /**
+     * A course choice can only narrow the report: a course the viewer may not see stays out.
+     */
+    public function test_course_choice_cannot_widen(): void {
+        global $PAGE;
+        $this->resetAfterTest();
+        $gen = $this->getDataGenerator();
+        $mine = $gen->create_course();
+        $other = $gen->create_course();
+        $user = $gen->create_and_enrol($mine, 'student');
+        $gen->enrol_user($user->id, $other->id, 'student');
+        $teacher = $gen->create_and_enrol($mine, 'editingteacher');
+        $this->setUser($teacher);
+        $renderer = $PAGE->get_renderer('core');
+
+        $data = (new report_page($user, (int)$teacher->id, null, null, '', [(int)$other->id]))->export_for_template($renderer);
+        $this->assertSame(0, $data->coursecount);
+        $this->assertFalse($data->hascourses);
+
+        $data = (new report_page($user, (int)$teacher->id, null, null, '', [(int)$mine->id, (int)$other->id]))
+            ->export_for_template($renderer);
+        $this->assertSame(1, $data->coursecount);
+    }
+
+    /**
      * Courses over the cap are summarised.
      */
     public function test_course_cap(): void {

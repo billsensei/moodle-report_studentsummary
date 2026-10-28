@@ -72,6 +72,36 @@ final class course_report_page_test extends \advanced_testcase {
     }
 
     /**
+     * The course list offers each course of the students shown, by name, and the summaries follow the choice.
+     */
+    public function test_course_choices(): void {
+        global $PAGE;
+        $this->resetAfterTest();
+        $gen = $this->getDataGenerator();
+        $course = $gen->create_course(['fullname' => 'Zoology']);
+        $other = $gen->create_course(['fullname' => 'Art']);
+        $teacher = $gen->create_and_enrol($course, 'editingteacher');
+        $student = $gen->create_and_enrol($course, 'student');
+        $gen->enrol_user($student->id, $other->id, 'student');
+        $this->setUser($teacher);
+        $PAGE->set_url('/report/studentsummary/course.php', ['id' => $course->id]);
+        $url = new \moodle_url('/report/studentsummary/course.php', ['id' => $course->id]);
+
+        // A teacher is offered only the course they may see, an administrator both, sorted by name.
+        $page = new course_report_page($course, (int)$teacher->id, $url);
+        $this->assertSame(['Zoology'], array_values($page->get_course_choices()));
+        $this->setAdminUser();
+        $page = new course_report_page($course, get_admin()->id, $url);
+        $this->assertSame(['Art', 'Zoology'], array_values($page->get_course_choices()));
+        $this->assertSame([(int)$other->id, (int)$course->id], array_keys($page->get_course_choices()));
+
+        $this->setUser($teacher);
+        $chosen = new course_report_page($course, (int)$teacher->id, $url, 0, null, null, 0, 25, [(int)$course->id]);
+        $data = $chosen->export_for_template($PAGE->get_renderer('core'));
+        $this->assertSame(1, $data->students[0]['summary']->coursecount);
+    }
+
+    /**
      * A course with no students renders the empty message, and an unknown page size falls back to the default.
      */
     public function test_empty_course(): void {

@@ -524,3 +524,13 @@ behat @report_studentsummary  20/151   20/151   20/151   20/151   20/151
 upgrade.php                   ok       ok       ok       ok       ok
 ```
 PHPUnit and Behat environments were re-initialised in each tree after the version bump. Not run: phpcs, mustache, phpdoc, print page-count checks. Behat has no scenario for the new link.
+
+## Release 0.5.0 (2026-10-28)
+Version 2026102702, release 0.5.0: choose the courses a summary covers. Single student: **Courses to include** menu (autocomplete). Course page: a tick box per course (`course_N` elements; `course_report_page::get_course_choices()` lists the courses of the students on the page that the viewer may see). The choice is carried as `courseids[0]`, `courseids[1]`, ... (`filter_form::courseids_url_params()`); it only narrows `access::get_courses()`, and site-level time is left out when courses are chosen. No database changes.
+```
+                              4.5.15   5.0.11   5.1.8+   5.2.4+   5.3+
+phpunit --fail-on-warning     70/399   70/399   70/399   70/399   70/399   (4.5: 2 risky, core PHP 8.4 output; others: 13 PHPUnit deprecations)
+behat @report_studentsummary  22/179   22/179   22/179   22/179   22/179
+upgrade.php                   ok       ok       ok       ok       ok
+```
+Bug found by Behat on 4.5 only: `moodle_url` there refuses array parameter values ("Url parameters values can not be arrays!"), while 5.x accepts them, so applying a course choice crashed. Fixed by giving each id its own indexed name. An empty choice is left out of the address, because a null value reaches it as a bare `courseids`, which `optional_param_array()` rejects with a debugging message. PHPUnit and Behat environments were re-initialised after the version bump. Not run: phpcs, mustache, phpdoc, print page-count checks.

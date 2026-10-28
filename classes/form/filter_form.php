@@ -29,13 +29,19 @@ defined('MOODLE_INTERNAL') || die();
 require_once($GLOBALS['CFG']->libdir . '/formslib.php');
 
 /**
- * Optional start and end date for the time-spent estimate (read-only GET form).
+ * Optional courses and start and end date for the report (posted, then redirected to a clean address).
+ *
+ * Custom data: `courses` (id => name) offers a menu of courses on a single student's report; `courselist`
+ * (id => name) offers a tick box per course on the course page.
  *
  * @package    report_studentsummary
  * @copyright  2026 Bill
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_form extends \moodleform {
+    /** @var string Name prefix of the course list tick boxes; the course id follows. */
+    private const BOXPREFIX = 'course_';
+
     /**
      * Build the form.
      */
@@ -47,6 +53,24 @@ class filter_form extends \moodleform {
                 $mform->addElement('hidden', $name, $this->_customdata[$name]);
                 $mform->setType($name, PARAM_INT);
             }
+        }
+        if (!empty($this->_customdata['courses']) && count($this->_customdata['courses']) > 1) {
+            $mform->addElement(
+                'autocomplete',
+                'courseids',
+                get_string('coursestoinclude', 'report_studentsummary'),
+                $this->_customdata['courses'],
+                ['multiple' => true, 'noselectionstring' => get_string('allcourses', 'report_studentsummary')]
+            );
+            $mform->setType('courseids', PARAM_INT);
+        }
+        if (!empty($this->_customdata['courselist'])) {
+            $boxes = [];
+            foreach ($this->_customdata['courselist'] as $id => $name) {
+                $boxes[] = $mform->createElement('advcheckbox', self::BOXPREFIX . $id, '', $name);
+            }
+            $mform->addGroup($boxes, 'courseboxes', get_string('coursestoinclude', 'report_studentsummary'), '<br>', false);
+            $mform->addElement('static', 'coursesnote', '', get_string('coursestoinclude_note', 'report_studentsummary'));
         }
         $mform->addElement('date_selector', 'from', get_string('datefrom', 'report_studentsummary'), ['optional' => true]);
         $mform->addElement('date_selector', 'to', get_string('dateto', 'report_studentsummary'), ['optional' => true]);
@@ -67,6 +91,42 @@ class filter_form extends \moodleform {
     }
 
     /**
+     * The address parameter for the submitted course choice.
+     *
+     * Takes the courses picked in the menu (courseids) and the ticked boxes of the course list (course_N).
+     *
+     * @param \stdClass $formdata Submitted data.
+     * @return array {@see self::courseids_url_params()}, or nothing when every course is wanted (the names are left
+     *     out, as an empty value would reach the address as a bare name that is not an array).
+     */
+    public static function courses_params(\stdClass $formdata): array {
+        $ids = array_map('intval', $formdata->courseids ?? []);
+        foreach ($formdata as $name => $value) {
+            if ($value && preg_match('/^' . self::BOXPREFIX . '(\d+)$/', $name, $match)) {
+                $ids[] = (int)$match[1];
+            }
+        }
+        return self::courseids_url_params(array_unique(array_filter($ids)));
+    }
+
+    /**
+     * Address parameters for a list of course ids.
+     *
+     * Moodle 4.5's moodle_url refuses array values, so each id gets its own name (courseids[0], courseids[1], ...),
+     * which PHP reads back as the array courseids.
+     *
+     * @param int[] $ids Course ids.
+     * @return array Parameter name => id, empty for no courses.
+     */
+    public static function courseids_url_params(array $ids): array {
+        $params = [];
+        foreach (array_values($ids) as $index => $id) {
+            $params['courseids[' . $index . ']'] = (int)$id;
+        }
+        return $params;
+    }
+
+    /**
      * Form values for a range taken from the address.
      *
      * @param int $from Start timestamp, 0 for none.
@@ -75,6 +135,20 @@ class filter_form extends \moodleform {
      */
     public static function range_defaults(int $from, int $to): array {
         return ['from' => $from, 'to' => $to ? $to - DAYSECS + 1 : 0];
+    }
+
+    /**
+     * Form values for the course choice taken from the address.
+     *
+     * @param int[] $courseids Chosen course ids, empty for all.
+     * @return array The menu value and a ticked box per chosen course.
+     */
+    public static function courses_defaults(array $courseids): array {
+        $defaults = ['courseids' => $courseids];
+        foreach ($courseids as $id) {
+            $defaults[self::BOXPREFIX . $id] = 1;
+        }
+        return $defaults;
     }
 
     /**

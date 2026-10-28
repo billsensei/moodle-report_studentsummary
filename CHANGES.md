@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-10-27) - beta
+
+- Choose which courses go into a summary. On a single student's report, **Courses to include** limits every box (activities, resources, average grade, time, courses, current grades) to the chosen courses; empty means all. On the course page (all students), **Courses to include** is a list of courses with a tick box each, and limits every summary to the ticked courses.
+- The choice is kept in the address (`courseids[]`), so it carries over to paging and printing.
+- It can only narrow a report: courses the viewer may not see stay out. Time outside any course is left out when courses are chosen.
+- New lang strings: `allcourses`, `coursestoinclude`, `coursestoinclude_note`.
+- No database changes, so there is no upgrade step.
+
 ## 0.4.6 (2026-10-27) - beta
 
 - Administrators (`moodle/site:config`) see a "Plugin settings" link at the top of the single-student and course pages. Core shows no Settings link for report plugins on the Plugins overview page. The link is hidden when printing.

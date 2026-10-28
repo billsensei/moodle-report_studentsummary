@@ -26,6 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['activitiescompleted'] = 'Activities completed';
 $string['activitytypes'] = 'Activity types';
+$string['allcourses'] = 'All courses';
 $string['alltime'] = 'All time';
 $string['applyfilter'] = 'Apply';
 $string['averagegrade'] = 'Average grade';
@@ -44,6 +45,8 @@ $string['colours'] = 'Report colours';
 $string['colours_desc'] = 'Choose a ready-made palette, then optionally override the background of individual boxes. Colours are checked so that text stays readable (WCAG AA), and the printed page keeps them. Palettes:';
 $string['completed'] = 'completed';
 $string['coursesenrolled'] = 'Courses enrolled';
+$string['coursestoinclude'] = 'Courses to include';
+$string['coursestoinclude_note'] = 'Tick the courses to include in every summary. Leave all unticked to include every course.';
 $string['coursesummaries'] = 'Student summaries (all students)';
 $string['currentgrades'] = 'Current grades';
 $string['datefrom'] = 'From';

@@ -56,6 +56,25 @@ Feature: Student summaries of a whole course
     Then I should not see "Alice Adams"
     And I should not see "Ben Brown"
 
+  Scenario: A teacher picks the courses to include from a list
+    Given the following "course enrolments" exist:
+      | user     | course | role    |
+      | student1 | CB     | student |
+    And I am on the "CA" "report_studentsummary > course" page logged in as admin
+    And I should see "Course B" in the ".ss-grid" "css_element"
+    And the field "Course A" matches value ""
+    When I set the field "Course A" to "1"
+    And I press "Apply"
+    Then I should see "Course A" in the ".ss-grid" "css_element"
+    And I should not see "Course B" in the ".ss-grid" "css_element"
+    And the field "Course A" matches value "1"
+    And the field "Course B" matches value ""
+    And I set the field "Course A" to ""
+    And I set the field "Course B" to "1"
+    And I press "Apply"
+    And I should see "Course B" in the ".ss-grid" "css_element"
+    And I should not see "Course A" in the ".ss-grid" "css_element"
+
   @javascript
   Scenario: Unticking a student leaves them out of the selection
     Given I am on the "CA" "report_studentsummary > course" page logged in as teacher1

@@ -63,6 +63,21 @@ function report_studentsummary_can_view(stdClass $user): bool {
 }
 
 /**
+ * The courses chosen in the address, empty for all courses.
+ *
+ * Ignored while the filter form is being posted: the posted choice is turned into an address parameter by the
+ * redirect that follows.
+ *
+ * @return int[]
+ */
+function report_studentsummary_courseids_param(): array {
+    if (data_submitted()) {
+        return [];
+    }
+    return array_values(array_filter(optional_param_array('courseids', [], PARAM_INT)));
+}
+
+/**
  * A "Plugin settings" link for administrators, or an empty string for everyone else.
  *
  * Core does not show a Settings link for report plugins on the Plugins overview page, so the report offers one.

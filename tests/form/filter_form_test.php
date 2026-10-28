@@ -67,6 +67,39 @@ final class filter_form_test extends \advanced_testcase {
     }
 
     /**
+     * The course choice becomes an address parameter, left out when every course is wanted.
+     */
+    public function test_courses_params(): void {
+        $this->assertSame(
+            ['courseids[0]' => 3, 'courseids[1]' => 5],
+            filter_form::courses_params((object)['courseids' => ['3', '5']])
+        );
+        $this->assertSame([], filter_form::courses_params((object)['courseids' => []]));
+        $this->assertSame([], filter_form::courses_params((object)[]));
+        // Ticked boxes of the course list count, unticked ones do not, and a course in both places counts once.
+        $this->assertSame(
+            ['courseids[0]' => 7, 'courseids[1]' => 9],
+            filter_form::courses_params((object)['course_7' => 1, 'course_8' => 0, 'course_9' => '1'])
+        );
+        $this->assertSame(
+            ['courseids[0]' => 3, 'courseids[1]' => 7],
+            filter_form::courses_params((object)['courseids' => [3], 'course_7' => 1, 'course_3' => 1])
+        );
+        $this->assertSame([], filter_form::courses_params((object)['course_7' => 0, 'other_7' => 1]));
+    }
+
+    /**
+     * Address parameters give back the course choice.
+     */
+    public function test_courses_defaults(): void {
+        $this->assertSame(
+            ['courseids' => [3, 5], 'course_3' => 1, 'course_5' => 1],
+            filter_form::courses_defaults([3, 5])
+        );
+        $this->assertSame(['courseids' => []], filter_form::courses_defaults([]));
+    }
+
+    /**
      * Address parameters give back the form values the user chose.
      */
     public function test_range_defaults_round_trip(): void {

@@ -53,6 +53,8 @@ class course_report_page implements \renderable, \templatable {
     private $perpage;
     /** @var \moodle_url Base url for the paging bar. */
     private $baseurl;
+    /** @var int[]|null Courses each summary is limited to, null for all. */
+    private $courseids;
 
     /**
      * Constructor.
@@ -65,6 +67,7 @@ class course_report_page implements \renderable, \templatable {
      * @param int|null $to Optional range end timestamp.
      * @param int $page Zero-based page number.
      * @param int $perpage Students per page.
+     * @param int[]|null $courseids Courses each summary is limited to, null for all.
      */
     public function __construct(
         \stdClass $course,
@@ -74,7 +77,8 @@ class course_report_page implements \renderable, \templatable {
         ?int $from = null,
         ?int $to = null,
         int $page = 0,
-        int $perpage = self::DEFAULT_PERPAGE
+        int $perpage = self::DEFAULT_PERPAGE,
+        ?array $courseids = null
     ) {
         $this->students = access::get_course_students($course, $viewerid, $groupid);
         $this->viewerid = $viewerid;
@@ -83,6 +87,7 @@ class course_report_page implements \renderable, \templatable {
         $this->perpage = in_array($perpage, self::PERPAGE_OPTIONS, true) ? $perpage : self::DEFAULT_PERPAGE;
         $this->page = max(0, min($page, (int)ceil(count($this->students) / $this->perpage) - 1));
         $this->baseurl = $baseurl;
+        $this->courseids = $courseids;
     }
 
     /**
@@ -101,6 +106,24 @@ class course_report_page implements \renderable, \templatable {
      */
     public function get_page_students(): array {
         return array_slice($this->students, $this->page * $this->perpage, $this->perpage, true);
+    }
+
+    /**
+     * The courses to choose from: every course the viewer may see for a student on the current page.
+     *
+     * @return string[] Course names keyed by course id, sorted by name.
+     */
+    public function get_course_choices(): array {
+        $choices = [];
+        foreach ($this->get_page_students() as $user) {
+            foreach (access::get_courses($user, $this->viewerid) as $course) {
+                $choices[$course->id] ??= format_string($course->fullname, true, [
+                    'context' => \context_course::instance($course->id),
+                ]);
+            }
+        }
+        \core_collator::asort($choices);
+        return $choices;
     }
 
     /**
@@ -135,7 +158,7 @@ class course_report_page implements \renderable, \templatable {
         $data->count = $this->get_count();
         $data->students = [];
         foreach ($this->get_page_students() as $user) {
-            $report = new report_page($user, $this->viewerid, $this->from, $this->to, 'u' . $user->id . '-');
+            $report = new report_page($user, $this->viewerid, $this->from, $this->to, 'u' . $user->id . '-', $this->courseids);
             $data->students[] = [
                 'id' => (int)$user->id,
                 'fullname' => fullname($user),
