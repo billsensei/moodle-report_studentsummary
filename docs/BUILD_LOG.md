@@ -550,3 +550,34 @@ PHPUnit and Behat environments re-initialised after the version bump. Not run: p
 
 ### Walk-through updated for 0.5.1 (2026-10-28)
 `/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (38 pages) now describe release 0.5.1 (version 2026102801; files identical to `dist/report_studentsummary_2026102801.zip`). Steps 1, 24 and 29 were retaken on the 5.1 demo site (:8005, same headless Chrome client as for 0.5.0; step 1 shows 0.5.1 and 2026102801, steps 24 and 29 show the evenly spaced course tick boxes). Step 29's caption and the limitations no longer mention the uneven spacing; the other limitation about the course list being built from the students on the current page stays. Cover, install page, quality heading and footer say 0.5.1 (test figures unchanged: PHPUnit 70 / 399, Behat 22 / 179). Steps 8 and 30 are the 0.5.0 screenshots (they do not show the tick list). The 0.5.0 version is kept as `dist/walkthrough51/walk-thru-0.5.0.pdf` (HTML: `walkthru.html.bak-0.5.0`). Source: `dist/walkthrough51/walkthru.html`.
+
+## Check gaps closed for 0.5.1 (2026-10-31)
+No code change; the checks skipped for 0.5.1 were run on the 5.3 tree (`MOODLE_DIR=/home/bill/test2/moodle53`; the deployed copy differs from the source only in `README.md`).
+```
+phplint                      37 files, no syntax error
+phpcs --max-warnings 0       37 files, clean
+validate                     clean
+mustache                     4 templates render, exit 0
+savepoints                   nothing to check (no db/upgrade.php)
+grunt stylelint:css          1 file, 0 errors
+phpdoc                       exit 0, no violations
+phpmd                        exit 0; 1 note: tests/output/report_page_test.php has 12 public methods (limit 10), left as is
+moodle-string-check          no hard-coded user-facing strings in PHP, Mustache or JS
+```
+- phpcs was run from the `/home/bill/test/moodle-plugin-ci` copy (see the tooling note above). mustache had to be pointed at the deployed copy inside the Moodle tree, since it rejects templates outside it.
+- phpdoc: `local_moodlecheck` (cloned from github.com/moodlehq/moodle-local_moodlecheck) was installed in the 5.3 tree, run, then uninstalled with `admin/cli/uninstall_plugins.php` and its folder removed; `public/local` is back to its original contents.
+- string check: the only literals passed to `throw` are two `coding_exception` messages (developer errors). About 25 keys in `lang/en/report_studentsummary.php` were not found by grep (probably dynamic or capability/cache names); not verified one by one.
+- Print page-count check: see below.
+
+### Print page-count check for 0.5.1 (2026-10-31)
+5.3 demo site (:8009, `php -S`, code as deployed), logged in as Tessa (password reset to a throwaway value with `admin/cli/reset_password.php`). Pages fetched with curl and the session cookie, a `<base href>` added, printed with headless Chromium `--print-to-pdf` (no header/footer), counted with `pdfinfo`:
+```
+single report Alice                                      1 page, A4 (594.96 x 841.92 pts)
+single report Ben                                        1 page, A4
+single report Maya (14 courses)                          1 page, A4, "+2 more courses not shown"
+course page BIO101, 5 students, none un-ticked           5 pages, A4
+```
+Not covered: the course page with students un-ticked or "Print this one" (those depend on the page's JavaScript, which this method does not run), the 4.5, 5.0, 5.1 and 5.2 trees, the Courses to include choice, Firefox, the interactive print dialog, greyscale printers, RTL. The `php -S` server was stopped afterwards.
+
+### Walk-through quality table updated (2026-10-31)
+`/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (still 38 pages, release 0.5.1) now show phplint/phpmd/phpcs, validate/mustache/phpdoc/stylelint and the print to A4 check as passing on 5.3 (the Moodle 5.1.8+ column; the checks were run on the 5.3 tree). The 4.5 column is unchanged ("not re-run", "not run on 4.5"). Wording was kept short so the summary stays on one page. Rebuilt with headless Chromium `--print-to-pdf` from `dist/walkthrough51/walkthru.html`; the previous PDF is `dist/walkthrough51/walk-thru-0.5.1-before-checks.pdf` and the previous HTML `walkthru.html.bak-0.5.1`.
