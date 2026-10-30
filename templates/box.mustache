@@ -22,6 +22,7 @@
     Context variables required for this template:
     * boxclass - Colour modifier, e.g. ss-box-blue
     * boxid - Unique id used for the heading
+    * boxlevel - Heading level (2..6) of the box heading
     * heading - Box heading
     * hasfigure - Whether a key figure is shown
     * figure - Key figure
@@ -35,6 +36,7 @@
     {
         "boxclass": "ss-box-blue",
         "boxid": "ss-activities",
+        "boxlevel": 3,
         "heading": "Activities completed",
         "hasfigure": true,
         "figure": "12",
@@ -45,7 +47,7 @@
     }
 }}
 <section class="ss-box {{boxclass}}{{#wide}} ss-span-2{{/wide}}" aria-labelledby="{{boxid}}-heading">
-    <h2 class="ss-box-heading" id="{{boxid}}-heading">{{heading}}</h2>
+    <h{{boxlevel}} class="ss-box-heading" id="{{boxid}}-heading">{{heading}}</h{{boxlevel}}>
     {{#hasfigure}}
     <p class="ss-figure"><span class="ss-figure-value">{{figure}}</span> <span class="ss-figure-label">{{figurelabel}}</span></p>
     {{/hasfigure}}

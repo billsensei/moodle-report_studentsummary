@@ -21,6 +21,7 @@
 
     Context variables required for this template:
     * idprefix - Prefix that keeps heading ids unique when several summaries share a page
+    * namelevel, boxlevel - Heading levels (2..6) of the student's name and of the box headings
     * fullname, pictureurl, sitename, reportdate, hasrange, range
     * colourstyle - CSS custom properties for the box colours (validated hex values only)
     * kpis - Box contexts, see report_studentsummary/box
@@ -32,6 +33,8 @@
     Example context (json):
     {
         "idprefix": "",
+        "namelevel": 2,
+        "boxlevel": 3,
         "fullname": "Ada Lovelace",
         "pictureurl": "https://example.com/pix/u/f1.png",
         "sitename": "Example site",
@@ -56,7 +59,7 @@
         <header class="ss-box ss-box-header ss-span-4">
             <img class="ss-picture" src="{{pictureurl}}" alt="" width="64" height="64">
             <div class="ss-header-text">
-                <h2 class="ss-name">{{fullname}}</h2>
+                <h{{namelevel}} class="ss-name">{{fullname}}</h{{namelevel}}>
                 <p class="ss-meta">{{sitename}}</p>
                 <p class="ss-meta">{{#str}} reportdate, report_studentsummary {{/str}}: {{reportdate}}</p>
                 <p class="ss-meta">{{#str}} daterange, report_studentsummary {{/str}}: {{range}}</p>
@@ -71,10 +74,10 @@
         {{/breakdowns}}
 
         <section class="ss-box ss-box-teal ss-span-4" aria-labelledby="ss-{{idprefix}}courses-heading">
-            <h2 class="ss-box-heading" id="ss-{{idprefix}}courses-heading">{{#str}} coursesenrolled, report_studentsummary {{/str}}</h2>
+            <h{{boxlevel}} class="ss-box-heading" id="ss-{{idprefix}}courses-heading">{{#str}} coursesenrolled, report_studentsummary {{/str}}</h{{boxlevel}}>
             <p class="ss-figure"><span class="ss-figure-value">{{coursecount}}</span> <span class="ss-figure-label">{{#str}} courses {{/str}}</span></p>
             {{#hascourses}}
-            <table class="ss-table">
+            <table class="ss-table" aria-labelledby="ss-{{idprefix}}courses-heading">
                 <thead>
                     <tr>
                         <th scope="col">{{#str}} course {{/str}}</th>
@@ -96,9 +99,9 @@
         </section>
 
         <section class="ss-box ss-box-rose ss-span-4" aria-labelledby="ss-{{idprefix}}grades-heading">
-            <h2 class="ss-box-heading" id="ss-{{idprefix}}grades-heading">{{#str}} currentgrades, report_studentsummary {{/str}}</h2>
+            <h{{boxlevel}} class="ss-box-heading" id="ss-{{idprefix}}grades-heading">{{#str}} currentgrades, report_studentsummary {{/str}}</h{{boxlevel}}>
             {{#hascourses}}
-            <table class="ss-table">
+            <table class="ss-table" aria-labelledby="ss-{{idprefix}}grades-heading">
                 <thead>
                     <tr>
                         <th scope="col">{{#str}} course {{/str}}</th>

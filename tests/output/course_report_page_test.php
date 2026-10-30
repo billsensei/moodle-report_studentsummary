@@ -69,6 +69,13 @@ final class course_report_page_test extends \advanced_testcase {
         $ids = [];
         preg_match_all('/ id="(ss-[^"]+)"/', $html, $ids);
         $this->assertSame(count($ids[1]), count(array_unique($ids[1])));
+
+        // Headings run h2 (page title in course.php), h3 (student), h4 (boxes), and no summary uses h2.
+        $this->assertStringNotContainsString('<h2', $html);
+        $this->assertSame(10, preg_match_all('/<h3 class="ss-name">/', $html));
+        $this->assertStringContainsString('<h4 class="ss-box-heading"', $html);
+        // Each Print this one button names its student.
+        $this->assertSame(10, preg_match_all('/>Print this one<span class="visually-hidden"> [^<]+<\/span><\/button>/', $html));
     }
 
     /**

@@ -71,6 +71,14 @@ final class report_page_test extends \advanced_testcase {
         $this->assertStringNotContainsString('<i>Ada</i>', $html);
         $this->assertStringNotContainsString('<b>101</b>', $html);
         $this->assertStringContainsString('&lt;i&gt;Ada&lt;/i&gt;', $html);
+
+        // The name is an h2 and the boxes are h3, so the order holds under the page's h1.
+        $this->assertSame(1, preg_match_all('/<h2 class="ss-name">/', $html));
+        $this->assertSame(0, preg_match_all('/<h2 class="ss-box-heading"/', $html));
+        $this->assertSame(8, preg_match_all('/<h3 class="ss-box-heading"/', $html));
+        // Both tables are named by their box heading.
+        $this->assertStringContainsString('<table class="ss-table" aria-labelledby="ss-courses-heading">', $html);
+        $this->assertStringContainsString('<table class="ss-table" aria-labelledby="ss-grades-heading">', $html);
     }
 
     /**

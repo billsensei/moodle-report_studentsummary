@@ -37,6 +37,8 @@
             "selectlabel": "Print Ada Lovelace",
             "summary": {
                 "idprefix": "u7-",
+                "namelevel": 3,
+                "boxlevel": 4,
                 "fullname": "Ada Lovelace",
                 "pictureurl": "https://example.com/pix/u/f1.png",
                 "sitename": "Example site",
@@ -83,7 +85,7 @@
                 <input class="form-check-input" type="checkbox" id="ss-select-{{id}}" data-action="report_studentsummary-select" checked>
                 <label class="form-check-label" for="ss-select-{{id}}">{{selectlabel}}</label>
             </div>
-            <button type="button" class="btn btn-secondary btn-sm ms-auto" data-action="report_studentsummary-printone">{{#str}} printthisone, report_studentsummary {{/str}}</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-auto" data-action="report_studentsummary-printone">{{#str}} printthisone, report_studentsummary {{/str}}<span class="visually-hidden"> {{fullname}}</span></button>
         </div>
         {{#summary}}
             {{> report_studentsummary/summary}}

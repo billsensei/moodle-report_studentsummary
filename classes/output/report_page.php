@@ -109,6 +109,9 @@ class report_page implements \renderable, \templatable {
         $data = new \stdClass();
         $data->idprefix = $this->idprefix;
         $data->fullname = fullname($this->user);
+        // Heading levels: the student's name, then the boxes one level below it.
+        $data->namelevel = 2;
+        $data->boxlevel = 3;
         $data->pictureurl = $picture->get_url($PAGE)->out(false);
         $data->sitename = format_string($SITE->fullname, true, ['context' => \context_system::instance()]);
         $data->reportdate = userdate(time(), get_string('strftimedatefullshort', 'langconfig'));

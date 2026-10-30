@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.2 (2026-10-31) - beta
+
+Accessibility fixes found in a code review against WCAG 2.1 AA.
+
+- Heading order. A single report is now h2 (student) then h3 (boxes) under the page's h1. On the course page the title is an h2, each student's name an h3 and the boxes h4. Before, the course page went h3, h2, h2.
+- Each **Print this one** button on the course page now names its student for screen readers ("Print this one Alice Anderson"). The visible text is unchanged.
+- The course and grade tables are named by their box heading (`aria-labelledby`).
+- No new lang strings and no database changes, so there is no upgrade step.
+
 ## 0.5.1 (2026-10-28) - beta
 
 - The tick boxes of **Courses to include** on the course page (Student summaries, all students) are now evenly spaced, one course per line. In 0.5.0 the gaps between them varied.

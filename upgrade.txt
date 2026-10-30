@@ -1,6 +1,11 @@
 This files describes API changes in /report/studentsummary/*,
 information provided here is intended especially for developers.
 
+=== 0.5.2 ===
+* The summary and box templates take two new context values, namelevel and boxlevel (heading levels 2..6).
+  report_page::export_for_template() sets them to 2 and 3; course_report_page sets 3 and 4 because the page title is
+  an h2. A caller that renders report_studentsummary/summary or /box itself must supply them.
+
 === 0.5.1 ===
 * No API changes.
 

@@ -159,11 +159,15 @@ class course_report_page implements \renderable, \templatable {
         $data->students = [];
         foreach ($this->get_page_students() as $user) {
             $report = new report_page($user, $this->viewerid, $this->from, $this->to, 'u' . $user->id . '-', $this->courseids);
+            // The page title is an h2, so each student's name is an h3 and its boxes h4.
+            $summary = $report->export_for_template($output);
+            $summary->namelevel = 3;
+            $summary->boxlevel = 4;
             $data->students[] = [
                 'id' => (int)$user->id,
                 'fullname' => fullname($user),
                 'selectlabel' => get_string('selectstudent', 'report_studentsummary', fullname($user)),
-                'summary' => $report->export_for_template($output),
+                'summary' => $summary,
             ];
         }
         $data->hasstudents = !empty($data->students);
