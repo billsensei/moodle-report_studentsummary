@@ -581,3 +581,18 @@ Not covered: the course page with students un-ticked or "Print this one" (those 
 
 ### Walk-through quality table updated (2026-10-31)
 `/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (still 38 pages, release 0.5.1) now show phplint/phpmd/phpcs, validate/mustache/phpdoc/stylelint and the print to A4 check as passing on 5.3 (the Moodle 5.1.8+ column; the checks were run on the 5.3 tree). The 4.5 column is unchanged ("not re-run", "not run on 4.5"). Wording was kept short so the summary stays on one page. Rebuilt with headless Chromium `--print-to-pdf` from `dist/walkthrough51/walkthru.html`; the previous PDF is `dist/walkthrough51/walk-thru-0.5.1-before-checks.pdf` and the previous HTML `walkthru.html.bak-0.5.1`.
+
+## Release 0.5.2 (2026-10-31)
+Version 2026103101, release 0.5.2: accessibility fixes from a code review against WCAG 2.1 AA (commit 54b09b3). No database changes, no new lang strings.
+- Heading order. `report_page::export_for_template()` sets `namelevel` 2 and `boxlevel` 3; `course_report_page` overrides them to 3 and 4 and `course.php` prints its title as an h2 (it was an h3, so the page went h3, h2, h2). `box.mustache` and `summary.mustache` use `<h{{namelevel}}>` and `<h{{boxlevel}}>`.
+- Each "Print this one" button on the course page has a visually hidden span with the student's name.
+- The courses and grades tables carry `aria-labelledby` pointing at their box heading (chosen over a caption so the heading is not read twice).
+- `upgrade.txt` and `CHANGES.md` updated; callers that render the summary or box templates themselves must supply `namelevel` and `boxlevel`.
+```
+                              4.5.15   5.3+
+phpunit --fail-on-warning     70/407   70/407   (4.5: 2 risky, core PHP 8.4 output; 5.3: 13 PHPUnit deprecations)
+phplint, phpcs --max-warnings 0, validate, mustache (5.3 tree): clean
+```
+New assertions: heading levels and named buttons in `course_report_page_test::test_sheets_and_paging`, heading levels and named tables in `report_page_test::test_render`. phpcs first flagged one 178-character test line, wrapped before the commit. PHPUnit environments were re-initialised after the version bump (the 5.3 tree's script is `public/admin/tool/phpunit/cli/init.php`; run PHPUnit with `LOCPATH=/home/bill/.local/locale`). `tools/deploy.sh` copied the plugin into all five trees.
+
+Not run: PHPUnit on 5.0, 5.1 and 5.2, Behat, phpdoc, stylelint, print page-count checks, a visual check of the new heading levels (the CSS styles headings by class, so no change expected), a screen reader. Not done: tag `v0.5.2`, release zip, README download line, walk-through (still describes 0.5.1). All three review findings are fixed; the review's unchecked items (contrast of text on the progress-bar tracks, 200% zoom, the React toolbar's checkbox label) are still unchecked.
