@@ -27,6 +27,14 @@ Feature: Student summary administration settings
     And I should see "Maximum courses listed"
     And I should see "Show time spent"
 
+  @javascript
+  Scenario: The Plugins overview page links to the settings
+    Given I log in as "admin"
+    When I navigate to "Plugins > Plugins overview" in site administration
+    And I follow "Settings" in the "Student summary" "table_row"
+    Then I should see "Idle timeout"
+    And I should see "Maximum courses listed"
+
   Scenario: Time spent can be hidden by the administrator
     Given the following "users" exist:
       | username | firstname | lastname |

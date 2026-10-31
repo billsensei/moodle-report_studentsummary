@@ -1,6 +1,10 @@
 This files describes API changes in /report/studentsummary/*,
 information provided here is intended especially for developers.
 
+=== 0.5.3 ===
+* New db/hooks.php registers \report_studentsummary\local\hook_callbacks::before_footer_html_generation(), which adds a
+  Settings link to this plugin's row on the Plugins overview page (core gives report plugins none). Purge caches.
+
 === 0.5.2 ===
 * The summary and box templates take two new context values, namelevel and boxlevel (heading levels 2..6).
   report_page::export_for_template() sets them to 2 and 3; course_report_page sets 3 and 4 because the page title is
