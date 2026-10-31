@@ -37,7 +37,7 @@ Test results for 0.5.1, on each of those five versions:
 
 ## Installation
 
-Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.5.1](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.5.1), beta). It contains one folder, `studentsummary`.
+Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.5.3](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.5.3), beta). It contains one folder, `studentsummary`.
 
 Unpack it into `report/` (Moodle 4.5) or `public/report/` (Moodle 5.1 and later), so the plugin ends up in `report/studentsummary`, then visit **Site administration > Notifications**, or run `php admin/cli/upgrade.php`.
 
