@@ -31,7 +31,7 @@ Feature: Student summary administration settings
   Scenario: The Plugins overview page links to the settings
     Given I log in as "admin"
     When I navigate to "Plugins > Plugins overview" in site administration
-    And I follow "Settings" in the "Student summary" "table_row"
+    And I click on "Settings" "link" in the "Student summary" "table_row"
     Then I should see "Idle timeout"
     And I should see "Maximum courses listed"
 
