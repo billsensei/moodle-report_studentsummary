@@ -2,6 +2,12 @@
 
 The full history is in `changelog.md`.
 
+## 0.5.4 (2026-11-12) - beta
+
+- The built React files in `js/esm/build` (`Toolbar.js`, `Toolbar.dev.js`) now start with the standard Moodle license header, which core's build step drops. New `tools/esm-banner.py` puts it back; run it after `grunt esm`. The component's behaviour is unchanged.
+- New GitHub Actions workflow (`.github/workflows/ci.yml`) running Moodle Plugin CI on Moodle 4.5 to 5.3.
+- No code or database changes, so there is no upgrade step.
+
 ## 0.5.3 (2026-10-31) - beta
 
 - The Plugins overview page (Site administration > Plugins > Plugins overview) now shows a **Settings** link in this plugin's row. Core leaves that cell empty for every report plugin, so a Hooks API callback (`before_footer_html_generation`, only on `/admin/plugins.php`, only for users with `moodle/site:config`) loads a small AMD module, `report_studentsummary/plugins_overview`, which adds the link. If core ever shows a link there itself, the module does nothing.
