@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.5 (2026-11-12) - beta
+
+- Fixes the Behat scenario for the Settings link on the Plugins overview page (`tests/behat/settings.feature`): it used a step Moodle does not define. Moodle Plugin CI now passes on Moodle 4.5 to 5.3. Also, the CI workflow can be started by hand.
+- No code or database changes, so there is no upgrade step.
+
 ## 0.5.4 (2026-11-12) - beta
 
 - The built React files in `js/esm/build` (`Toolbar.js`, `Toolbar.dev.js`) now start with the standard Moodle license header, which core's build step drops. New `tools/esm-banner.py` puts it back; run it after `grunt esm`. The component's behaviour is unchanged.
