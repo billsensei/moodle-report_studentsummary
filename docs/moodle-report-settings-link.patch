@@ -1,0 +1,132 @@
+diff --git a/public/lib/classes/plugininfo/report.php b/public/lib/classes/plugininfo/report.php
+index c3eb73232..54300f224 100644
+--- a/public/lib/classes/plugininfo/report.php
++++ b/public/lib/classes/plugininfo/report.php
+@@ -36,6 +36,29 @@ class report extends base {
+         return true;
+     }
+ 
++    #[\Override]
++    public function get_settings_section_name() {
++        return 'report' . $this->name;
++    }
++
++    /**
++     * Returns the URL of the plugin settings page.
++     *
++     * Reports often register an admin_externalpage with the same name that links to the report itself,
++     * so only a real settings page counts here.
++     *
++     * @return null|moodle_url
++     */
++    #[\Override]
++    public function get_settings_url(): ?moodle_url {
++        $settings = admin_get_root()->locate($this->get_settings_section_name());
++        if ($settings instanceof \admin_settingpage) {
++            return $settings->get_settings_page_url();
++        }
++
++        return null;
++    }
++
+     /**
+      * Return URL used for management of plugins of this type.
+      * @return moodle_url
+diff --git a/public/lib/tests/plugininfo/report_test.php b/public/lib/tests/plugininfo/report_test.php
+new file mode 100644
+index 000000000..d7632d4fa
+--- /dev/null
++++ b/public/lib/tests/plugininfo/report_test.php
+@@ -0,0 +1,92 @@
++<?php
++// This file is part of Moodle - http://moodle.org/
++//
++// Moodle is free software: you can redistribute it and/or modify
++// it under the terms of the GNU General Public License as published by
++// the Free Software Foundation, either version 3 of the License, or
++// (at your option) any later version.
++//
++// Moodle is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++//
++// You should have received a copy of the GNU General Public License
++// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
++
++declare(strict_types=1);
++
++namespace core\plugininfo;
++
++use advanced_testcase;
++use core_plugin_manager;
++
++/**
++ * Unit tests for the report plugininfo class
++ *
++ * @package     core
++ * @copyright   2026 Moodle contributors
++ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
++ */
++#[\PHPUnit\Framework\Attributes\CoversClass(\core\plugininfo\report::class)]
++final class report_test extends advanced_testcase {
++
++    /**
++     * Test the settings section name.
++     */
++    public function test_get_settings_section_name(): void {
++        $plugin = core_plugin_manager::instance()->get_plugin_info('report_eventlist');
++        $this->assertSame('reporteventlist', $plugin->get_settings_section_name());
++    }
++
++    /**
++     * Test the settings URL of a report that has a settings page.
++     */
++    public function test_get_settings_url_with_settings_page(): void {
++        global $CFG;
++        require_once($CFG->libdir . '/adminlib.php');
++        $this->resetAfterTest();
++        $this->setAdminUser();
++
++        // No core report has settings, so add a page for one of them to the admin tree.
++        $info = core_plugin_manager::instance()->get_plugin_info('report_outline');
++        $page = new \admin_settingpage($info->get_settings_section_name(), 'Outline', 'moodle/site:config');
++        admin_get_root()->add('reportplugins', $page);
++
++        $url = $info->get_settings_url();
++        $this->assertInstanceOf(\moodle_url::class, $url);
++        $this->assertEquals(
++            new \moodle_url('/admin/settings.php', ['section' => 'reportoutline']),
++            $url
++        );
++    }
++
++    /**
++     * Test that reports without a settings page have no settings URL.
++     *
++     * @param string $plugin
++     */
++    #[\PHPUnit\Framework\Attributes\DataProvider('get_settings_url_none_provider')]
++    public function test_get_settings_url_without_settings_page(string $plugin): void {
++        global $CFG;
++        require_once($CFG->libdir . '/adminlib.php');
++        $this->resetAfterTest();
++        $this->setAdminUser();
++
++        $info = core_plugin_manager::instance()->get_plugin_info($plugin);
++        $this->assertNull($info->get_settings_url());
++    }
++
++    /**
++     * Data provider for test_get_settings_url_without_settings_page.
++     *
++     * @return array
++     */
++    public static function get_settings_url_none_provider(): array {
++        return [
++            // The log report only registers an external page that links to the report itself.
++            'Report with only an external page' => ['report_log'],
++            'Report without any admin page' => ['report_outline'],
++        ];
++    }
++}
