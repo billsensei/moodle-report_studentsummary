@@ -12,7 +12,7 @@ Site administration > Plugins > Plugins overview has a "Settings" column. The li
 
 Other plugin types do this: `block`, `enrol`, `auth`, `editor`, `format` and others. `\core\plugininfo\report` does not, so base returns `null` and the column stays empty for every report plugin.
 
-The settings page does exist. `admin/settings/plugins.php` (line 590) creates an `admin_settingpage` named `'report' . $report` for each report plugin that has a `settings.php`. It is reachable at `/admin/settings.php?section=report<name>`. Plugin authors can't fix this themselves, because the plugininfo class is chosen by plugin type and a plugin can't replace it.
+The settings page does exist. `admin/settings/plugins.php` (line 590) creates an `admin_settingpage` named `'report' . $report` for each report plugin that has a `settings.php`. It is reachable at `/admin/settings.php?section=report<name>`. Plugin authors can't fix this properly themselves, because the plugininfo class is chosen by plugin type and a plugin can't replace it. The only workaround is to add the link from the plugin, for example with a Hooks API callback on `/admin/plugins.php` that loads a small AMD module to insert it into the table row, which is what `report_studentsummary` does since 0.5.3.
 
 ## Steps to reproduce
 
@@ -67,4 +67,4 @@ New PHPUnit test `public/lib/tests/plugininfo/report_test.php`:
 
 The `report_log` case fails without the `get_settings_url()` override, which is why it is needed: with only `get_settings_section_name()` added, `report_log` got `/report/log/index.php?id=0` as its Settings link.
 
-Checked with the patch on 5.3: a third-party report with a settings page (`report_studentsummary`) gets a Settings link to `/admin/settings.php?section=reportstudentsummary` on the Plugins overview page (Behat). Still to do: run the new PHPUnit test and the full `lib/tests/plugininfo` group, and file the issue (tracker.moodle.org needs an account; not filed).
+Checked with the patch on 5.3: a third-party report with a settings page (`report_studentsummary`) gets a Settings link to `/admin/settings.php?section=reportstudentsummary` on the Plugins overview page (Behat). The new PHPUnit test (4 tests, 5 assertions) passes on 5.3. The rest of the `lib/tests/plugininfo` group has not been run.
