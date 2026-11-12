@@ -641,3 +641,6 @@ Alice with dark backgrounds + light text colours         1 page, A4, colours kep
 BIO101 with the same colours                             5 pages, A4
 ```
 The first attempt printed the login page four times (my script had lost its login step), so its "1 page" results were discarded; the figures above are from the corrected script, which printed the right pages (checked by name). The dark-colour settings were removed afterwards (no non-empty colour settings remain), and the :8009 server and MariaDB were stopped. Not covered: the 4.5, 5.0, 5.1 and 5.2 trees, the Courses to include choice, Firefox, the interactive print dialog, greyscale printers, RTL. The walk-through still says print was "not re-run for 0.6.0".
+
+### Walk-through: print row for 0.6.0 (2026-11-12)
+`/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (still 39 pages) now show "Print to A4" as passing on 5.3 for 0.6.0 ("1 page per student"), from the print check above; the Moodle 4.5 cell still says "not re-run (0.3.0: 1 page)". A longer first wording pushed the footer onto a 40th page, so the cell was shortened. The previous HTML is `dist/walkthrough51/walkthru.html.bak-print`. No screenshots were retaken and no servers were started.
