@@ -1,0 +1,27 @@
+name: Release Plugin version to Moodle Marketplace
+
+# Submits a new version to the Moodle Marketplace when a version tag such as v0.6.1 is pushed.
+# Needs the repository secret MOODLE_MARKETPLACE_TOKEN (an API token from the Marketplace account security settings).
+# Release notes come from the GitHub Release for the tag, or else from CHANGES.md.
+# See https://github.com/moodlehq/moodle-plugin-release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to be released (e.g. v0.6.1)'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  release-to-marketplace:
+    uses: moodlehq/moodle-plugin-release/.github/workflows/moodle-release.yml@7c56bd9ce7b0a3125459924e7bd08570d41b9aa3 # main as of 2026-11-12 (revision 2026101401)
+    with:
+      tag: ${{ inputs.tag }}
+    secrets:
+      MOODLE_MARKETPLACE_TOKEN: ${{ secrets.MOODLE_MARKETPLACE_TOKEN }}

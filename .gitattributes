@@ -1,0 +1,5 @@
+# Left out of `git archive` zips, which the Moodle Marketplace release workflow builds from the tag.
+/.github export-ignore
+/.gitattributes export-ignore
+/docs export-ignore
+/tools export-ignore
