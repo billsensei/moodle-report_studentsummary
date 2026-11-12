@@ -28,12 +28,12 @@ Use the **Print** button, or the browser's print dialog. The page prints on one 
 
 ## Requirements
 
-Moodle 4.5 or later. Release 0.5.1 was tested on 4.5.15, 5.0.11, 5.1.8, 5.2.4 and 5.3.
+Moodle 4.5 or later. Release 0.6.0 was tested with Moodle Plugin CI (GitHub Actions) on the current 4.5, 5.0, 5.1, 5.2 and 5.3 stable branches, with PHP 8.1 to 8.4 and MariaDB or PostgreSQL.
 
-Test results for 0.5.1, on each of those five versions:
+Test results for 0.6.0, the same on each of those five versions:
 
-- PHPUnit: 70 tests, 399 assertions, all passing. Moodle 4.5.15 reports 2 risky tests (PHP 8.4 deprecation output from core, not from the plugin); 5.0.11, 5.1.8, 5.2.4 and 5.3 report 13 PHPUnit deprecations.
-- Behat: 22 scenarios, 179 steps, all passing.
+- PHPUnit: 73 tests, 434 assertions, all passing. Moodle 5.0, 5.1, 5.2 and 5.3 report 13 PHPUnit deprecations (from core, not from the plugin); 4.5 reports none.
+- Behat: 23 scenarios, 184 steps, all passing.
 
 ## Installation
 
