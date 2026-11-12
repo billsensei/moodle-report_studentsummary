@@ -627,3 +627,17 @@ Version 2026111203, release 0.6.0: a text colour per box (`textcolour_<box>` set
 
 ### Walk-through: quality table for 0.6.0 (2026-11-12)
 `/home/bill/test2/walk-thru.pdf` and `docs/walk-thru.pdf` (still 39 pages) now show the 0.6.0 figures from Moodle Plugin CI on commit fbe0de5 (run 43126421770), the same on Moodle 4.5, 5.0, 5.1, 5.2 and 5.3: PHPUnit 73 tests / 434 assertions (4.5: no deprecations; 5.0 to 5.3: 13 core deprecations), Behat 23 scenarios / 184 steps (4 `@javascript` scenarios), and phplint, phpcs, phpdoc, validate, savepoints, mustache and grunt passing. The columns are now "Moodle 4.5" and "Moodle 5.0 to 5.3" (CI uses the stable branch heads, not named patch releases). phpmd is not listed (advisory in CI). Print to A4 is shown as not re-run for 0.6.0 (last checked on 0.5.1: 1 page each on 5.3). The old 0.5.1 table and heading are gone; the previous HTML is `dist/walkthrough51/walkthru.html.bak-quality`. No screenshots were retaken and no servers were started.
+
+### Print page-count check for 0.6.0 (2026-11-12)
+5.3 demo site (:8009, `php -S`, 0.6.0 as deployed and upgraded with `admin/cli/upgrade.php`, caches purged, admin password reset to the same throwaway). Different from the 0.5.1 check: the pages were printed from a logged-in headless Chromium session over the DevTools protocol (`Page.printToPDF`, A4 8.268 x 11.693 in, backgrounds on, no header/footer; small Node script, not kept), so the page's JavaScript ran. Counted with `pdfinfo`; student names per page read with `pdftotext`:
+```
+single report Alice                                      1 page, A4
+single report Ben                                        1 page, A4
+single report Maya (14 courses)                          1 page, A4, "+2 more courses not shown"
+course page BIO101, 5 students, all ticked               5 pages, A4 (Alice, Ben, Cara, Dan, Eve, one each)
+course page BIO101, Ben un-ticked                        4 pages, A4 (Ben left out)
+course page BIO101, "Print this one" on Cara             1 page, A4 (Cara)
+Alice with dark backgrounds + light text colours         1 page, A4, colours kept (looked at a render)
+BIO101 with the same colours                             5 pages, A4
+```
+The first attempt printed the login page four times (my script had lost its login step), so its "1 page" results were discarded; the figures above are from the corrected script, which printed the right pages (checked by name). The dark-colour settings were removed afterwards (no non-empty colour settings remain), and the :8009 server and MariaDB were stopped. Not covered: the 4.5, 5.0, 5.1 and 5.2 trees, the Courses to include choice, Firefox, the interactive print dialog, greyscale printers, RTL. The walk-through still says print was "not re-run for 0.6.0".
