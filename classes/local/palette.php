@@ -40,6 +40,9 @@ class palette {
     /** @var string Palette used when the setting is missing or unknown. */
     public const DEFAULT = 'default';
 
+    /** @var string Prefix of the setting names that hold a box's own text colour. */
+    public const TEXT_PREFIX = 'textcolour_';
+
     /** @var string The weakest text colour used in any palette, which overrides must stay readable against. */
     public const REFERENCE_INK = '#3e4c59';
 
@@ -199,21 +202,62 @@ class palette {
     }
 
     /**
-     * The colours in force: the chosen palette with valid, readable per-box overrides applied.
+     * Whether a box background and the text on it contrast enough.
      *
-     * An override that is not a hex colour, or is too dark for the text, is ignored (the settings page refuses
-     * such values, but configuration can also be written directly).
+     * @param string $background A #rrggbb colour.
+     * @param string|null $text The box's own text colour, or null for the palette's text colours.
+     * @param array $preset The palette in use.
+     * @return bool
+     */
+    public static function box_is_readable(string $background, ?string $text, array $preset): bool {
+        $inks = $text ? [$text] : [$preset['ink'], $preset['soft'], self::REFERENCE_INK];
+        return self::is_readable($background, $inks);
+    }
+
+    /**
+     * The palette in use.
      *
+     * @param string|null $key Palette key, or null for the one that is configured.
      * @return array ['ink' => string, 'soft' => string, 'boxes' => [box => [background, border]]]
      */
-    public static function colours(): array {
+    public static function preset(?string $key = null): array {
         $presets = self::presets();
-        $key = (string)get_config('report_studentsummary', 'palette');
-        $preset = $presets[$key] ?? $presets[self::DEFAULT];
+        $key ??= (string)get_config('report_studentsummary', 'palette');
+        return $presets[$key] ?? $presets[self::DEFAULT];
+    }
+
+    /**
+     * The colours in force: the chosen palette with valid, readable per-box overrides applied.
+     *
+     * Each box can override its background and its text colour. An override that is not a hex colour, or that
+     * leaves the text hard to read, is ignored (the settings page refuses such values, but configuration can
+     * also be written directly). If a pair is unreadable together, the background alone is tried, then the text
+     * colour alone, then the palette.
+     *
+     * @return array ['ink' => string, 'soft' => string, 'boxes' => [box => [background, border]],
+     *     'inks' => [box => text colour]] where 'inks' holds only the boxes with their own text colour.
+     */
+    public static function colours(): array {
+        $preset = self::preset();
+        $preset['inks'] = [];
         foreach (array_keys(self::BOXES) as $box) {
-            $override = self::normalise_hex((string)get_config('report_studentsummary', 'colour_' . $box));
-            if ($override && self::is_readable($override, [$preset['ink'], $preset['soft'], self::REFERENCE_INK])) {
-                $preset['boxes'][$box] = [$override, self::darken($override, self::BORDER_FACTOR)];
+            $background = self::normalise_hex((string)get_config('report_studentsummary', 'colour_' . $box)) ?: null;
+            $text = self::normalise_hex((string)get_config('report_studentsummary', self::TEXT_PREFIX . $box)) ?: null;
+            $paletteback = $preset['boxes'][$box][0];
+            foreach ([[$background, $text], [$background, null], [null, $text]] as [$back, $ink]) {
+                if (!$back && !$ink) {
+                    continue;
+                }
+                if (!self::box_is_readable($back ?? $paletteback, $ink, $preset)) {
+                    continue;
+                }
+                if ($back) {
+                    $preset['boxes'][$box] = [$back, self::darken($back, self::BORDER_FACTOR)];
+                }
+                if ($ink) {
+                    $preset['inks'][$box] = $ink;
+                }
+                break;
             }
         }
         return $preset;
@@ -222,7 +266,8 @@ class palette {
     /**
      * The colours as CSS custom properties for the style attribute of the report wrapper.
      *
-     * @return string For example "--ss-ink:#1f2933;--ss-blue-bg:#dbeafe;...".
+     * @return string For example "--ss-ink:#1f2933;--ss-blue-bg:#dbeafe;..."; a box with its own text colour also gets
+     *     "--ss-blue-ink" and "--ss-blue-bar-bg".
      */
     public static function style(): string {
         $colours = self::colours();
@@ -237,6 +282,11 @@ class palette {
             [$background, $border] = $colours['boxes'][$box];
             $declarations[] = "--ss-$stem-bg:$background";
             $declarations[] = "--ss-$stem-border:$border";
+            if (isset($colours['inks'][$box])) {
+                [$red, $green, $blue] = array_map(fn($offset) => hexdec(substr($colours['inks'][$box], $offset, 2)), [1, 3, 5]);
+                $declarations[] = "--ss-$stem-ink:" . $colours['inks'][$box];
+                $declarations[] = "--ss-$stem-bar-bg:rgba($red,$green,$blue,0.15)";
+            }
         }
         return implode(';', $declarations) . ';';
     }

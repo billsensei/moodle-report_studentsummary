@@ -37,7 +37,7 @@ Test results for 0.5.1, on each of those five versions:
 
 ## Installation
 
-Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.5.5](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.5.5), beta). It contains one folder, `studentsummary`.
+Download the zip from the [latest release](https://github.com/billsensei/moodle-report_studentsummary/releases/latest) (currently [0.6.0](https://github.com/billsensei/moodle-report_studentsummary/releases/tag/v0.6.0), beta). It contains one folder, `studentsummary`.
 
 Unpack it into `report/` (Moodle 4.5) or `public/report/` (Moodle 5.1 and later), so the plugin ends up in `report/studentsummary`, then visit **Site administration > Notifications**, or run `php admin/cli/upgrade.php`.
 
@@ -69,8 +69,9 @@ Under **Site administration > Plugins > Reports > Student summary** (direct addr
 | Show time spent | Yes | Turns the estimate off |
 | Colour palette | Default | Ready-made colours for every box: Default (soft pastels), High contrast, Greyscale (for black-and-white printing) or Earth tones |
 | Box colours (one per box) | empty | Optional `#rrggbb` background for the header, activities, resources, average grade, time, courses and current grades boxes. Empty uses the palette. The border is derived from the background |
+| Box text colours (one per box) | empty | Optional `#rrggbb` text colour for the same seven boxes. Empty uses the palette's text colours. Choose a light text colour to use a dark background |
 
-Colour choices are checked so that the text on them keeps a contrast ratio of at least 4.5:1 (WCAG AA); a colour that is too dark is refused. The printed page keeps the chosen colours.
+Colour choices are checked so that the text on them keeps a contrast ratio of at least 4.5:1 (WCAG AA). A box's background and text colour are checked together: a dark background is refused unless you also choose a light text colour for that box, and a text colour that is too close to its background is refused. The printed page keeps the chosen colours.
 
 ## Known limitations
 

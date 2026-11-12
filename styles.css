@@ -39,6 +39,7 @@
     border-radius: 4mm;
     border: 0.4mm solid var(--ss-box-border, transparent);
     background: var(--ss-box-bg, #fff);
+    color: var(--ss-box-ink, var(--ss-ink));
     padding: 4mm;
     break-inside: avoid;
     min-width: 0;
@@ -54,6 +55,8 @@
 
 .report-studentsummary .ss-box-header {
     --ss-box-bg: var(--ss-header-bg);
+    --ss-box-ink: var(--ss-header-ink);
+    --ss-box-bar-bg: var(--ss-header-bar-bg);
     --ss-box-border: var(--ss-header-border, #9aa5b1);
     display: flex;
     align-items: center;
@@ -62,31 +65,43 @@
 
 .report-studentsummary .ss-box-blue {
     --ss-box-bg: var(--ss-blue-bg);
+    --ss-box-ink: var(--ss-blue-ink);
+    --ss-box-bar-bg: var(--ss-blue-bar-bg);
     --ss-box-border: var(--ss-blue-border);
 }
 
 .report-studentsummary .ss-box-green {
     --ss-box-bg: var(--ss-green-bg);
+    --ss-box-ink: var(--ss-green-ink);
+    --ss-box-bar-bg: var(--ss-green-bar-bg);
     --ss-box-border: var(--ss-green-border);
 }
 
 .report-studentsummary .ss-box-amber {
     --ss-box-bg: var(--ss-amber-bg);
+    --ss-box-ink: var(--ss-amber-ink);
+    --ss-box-bar-bg: var(--ss-amber-bar-bg);
     --ss-box-border: var(--ss-amber-border);
 }
 
 .report-studentsummary .ss-box-purple {
     --ss-box-bg: var(--ss-purple-bg);
+    --ss-box-ink: var(--ss-purple-ink);
+    --ss-box-bar-bg: var(--ss-purple-bar-bg);
     --ss-box-border: var(--ss-purple-border);
 }
 
 .report-studentsummary .ss-box-teal {
     --ss-box-bg: var(--ss-teal-bg);
+    --ss-box-ink: var(--ss-teal-ink);
+    --ss-box-bar-bg: var(--ss-teal-bar-bg);
     --ss-box-border: var(--ss-teal-border);
 }
 
 .report-studentsummary .ss-box-rose {
     --ss-box-bg: var(--ss-rose-bg);
+    --ss-box-ink: var(--ss-rose-ink);
+    --ss-box-bar-bg: var(--ss-rose-bar-bg);
     --ss-box-border: var(--ss-rose-border);
 }
 
@@ -102,7 +117,7 @@
 
 .report-studentsummary .ss-meta {
     margin: 0;
-    color: var(--ss-ink-soft);
+    color: var(--ss-box-ink, var(--ss-ink-soft));
 }
 
 .report-studentsummary .ss-box-heading {
@@ -125,7 +140,7 @@
 
 .report-studentsummary .ss-figure-label,
 .report-studentsummary .ss-note {
-    color: var(--ss-ink-soft);
+    color: var(--ss-box-ink, var(--ss-ink-soft));
 }
 
 .report-studentsummary .ss-note {
@@ -177,21 +192,21 @@
     border: 0;
     border-radius: 1.25mm;
     overflow: hidden;
-    background: var(--ss-bar-bg);
-    color: var(--ss-bar);
+    background: var(--ss-box-bar-bg, var(--ss-bar-bg));
+    color: var(--ss-box-ink, var(--ss-bar));
     margin-inline-end: 0.25rem;
 }
 
 .report-studentsummary .ss-bar::-webkit-progress-bar {
-    background: var(--ss-bar-bg);
+    background: var(--ss-box-bar-bg, var(--ss-bar-bg));
 }
 
 .report-studentsummary .ss-bar::-webkit-progress-value {
-    background: var(--ss-bar);
+    background: var(--ss-box-ink, var(--ss-bar));
 }
 
 .report-studentsummary .ss-bar::-moz-progress-bar {
-    background: var(--ss-bar);
+    background: var(--ss-box-ink, var(--ss-bar));
 }
 
 /* Narrow screens: stack the boxes. */

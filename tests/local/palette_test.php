@@ -148,4 +148,81 @@ final class palette_test extends \advanced_testcase {
         $this->assertStringContainsString('--ss-header-bg:#e4e7eb;', $style);
         $this->assertStringNotContainsString('evil', $style);
     }
+
+    /**
+     * A box can have its own text colour, which also allows a dark background.
+     */
+    public function test_text_colour_overrides(): void {
+        $this->resetAfterTest();
+        $default = palette::presets()['default'];
+
+        // A dark background alone is refused, but works with a light text colour.
+        set_config('colour_time', '#1e3a8a', 'report_studentsummary');
+        $this->assertSame($default['boxes']['time'], palette::colours()['boxes']['time']);
+        set_config('textcolour_time', '#ffffff', 'report_studentsummary');
+        $colours = palette::colours();
+        $this->assertSame('#1e3a8a', $colours['boxes']['time'][0]);
+        $this->assertSame(['time' => '#ffffff'], $colours['inks']);
+
+        // A text colour on its own is checked against the palette background.
+        set_config('textcolour_courses', '#000000', 'report_studentsummary');
+        $this->assertSame('#000000', palette::colours()['inks']['courses']);
+        set_config('textcolour_courses', '#ccfbf0', 'report_studentsummary');
+        $this->assertArrayNotHasKey('courses', palette::colours()['inks']);
+
+        // Light text on a light background: the pair is refused, and the background alone is used.
+        set_config('colour_grade', '#e0f2fe', 'report_studentsummary');
+        set_config('textcolour_grade', '#f0f0f0', 'report_studentsummary');
+        $colours = palette::colours();
+        $this->assertSame('#e0f2fe', $colours['boxes']['grade'][0]);
+        $this->assertArrayNotHasKey('grade', $colours['inks']);
+
+        // Text colours that are not hex are ignored.
+        foreach (['white', 'rgb(255,255,255)', '#fff;x:y'] as $bad) {
+            set_config('textcolour_resources', $bad, 'report_studentsummary');
+            $this->assertArrayNotHasKey('resources', palette::colours()['inks'], $bad);
+        }
+    }
+
+    /**
+     * A box with its own text colour gets its own custom properties, and nothing unsafe gets in.
+     */
+    public function test_style_with_text_colour(): void {
+        $this->resetAfterTest();
+        set_config('colour_activities', '#1e3a8a', 'report_studentsummary');
+        set_config('textcolour_activities', '#FFFFFF', 'report_studentsummary');
+        set_config('textcolour_grades', 'red;background:url(//evil)', 'report_studentsummary');
+        $style = palette::style();
+        $this->assertStringContainsString('--ss-blue-bg:#1e3a8a;', $style);
+        $this->assertStringContainsString('--ss-blue-ink:#ffffff;', $style);
+        $this->assertStringContainsString('--ss-blue-bar-bg:rgba(255,255,255,0.15);', $style);
+        $this->assertStringNotContainsString('--ss-rose-ink', $style);
+        $this->assertStringNotContainsString('evil', $style);
+        $this->assertMatchesRegularExpression('/^(--ss-[a-z-]+:(#[0-9a-f]{6}|rgba\\(\\d+,\\d+,\\d+,0\\.15\\));)+$/', $style);
+    }
+
+    /**
+     * The settings check a box's background and text colour together.
+     */
+    public function test_setting_checks_the_pair(): void {
+        $this->resetAfterTest();
+        $background = new \report_studentsummary\admin\setting_boxcolour('time');
+        $text = new \report_studentsummary\admin\setting_boxcolour('time', true);
+
+        $this->assertNotSame('', $background->write_setting('#1e3a8a'));
+        $this->assertNotSame('', $background->write_setting('red'));
+        $this->assertSame('', $background->write_setting('#E0F2FE'));
+        $this->assertSame('#e0f2fe', get_config('report_studentsummary', 'colour_time'));
+
+        // White text on the light background is refused; dark text is fine.
+        $this->assertNotSame('', $text->write_setting('#ffffff'));
+        $this->assertSame('', $text->write_setting('#102a43'));
+        $this->assertSame('#102a43', get_config('report_studentsummary', 'textcolour_time'));
+
+        // With dark text stored, a dark background is now refused too.
+        $this->assertNotSame('', $background->write_setting('#1e3a8a'));
+        // Clearing the text colour is always allowed.
+        $this->assertSame('', $text->write_setting(''));
+        $this->assertSame('', get_config('report_studentsummary', 'textcolour_time'));
+    }
 }

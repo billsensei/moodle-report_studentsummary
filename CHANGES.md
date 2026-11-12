@@ -2,6 +2,13 @@
 
 The full history is in `changelog.md`.
 
+## 0.6.0 (2026-11-12) - beta
+
+- Each box can now have its own **text colour**, next to its background colour, under Site administration > Plugins > Reports > Student summary. Empty uses the palette's text colours. The text colour applies to everything in the box, including the labels, notes and progress bars.
+- A box's background and text colour are checked together for contrast (at least 4.5:1, WCAG AA). A dark background is now accepted when a light text colour is chosen for the box, and a text colour that is too close to its background is refused. If a saved pair does not meet the minimum when the report is shown, the report uses the background alone, then the text colour alone, then the palette.
+- New lang strings: `textcolour_*` (one per box), `textcolour_desc`, `textcolourlowcontrast`. New PHPUnit tests for the text colours and the settings check.
+- No database changes, so there is no upgrade step. Purge caches after updating: Moodle keeps the plugin's stylesheet in the theme cache, and without a purge the new text colours are not applied.
+
 ## 0.5.5 (2026-11-12) - beta
 
 - Fixes the Behat scenario for the Settings link on the Plugins overview page (`tests/behat/settings.feature`): it used a step Moodle does not define. Moodle Plugin CI now passes on Moodle 4.5 to 5.3. Also, the CI workflow can be started by hand.

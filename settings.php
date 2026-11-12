@@ -89,5 +89,6 @@ if ($ADMIN->fulltree && $settings) {
     ));
     foreach (array_keys(\report_studentsummary\local\palette::BOXES) as $box) {
         $settings->add(new \report_studentsummary\admin\setting_boxcolour($box));
+        $settings->add(new \report_studentsummary\admin\setting_boxcolour($box, true));
     }
 }

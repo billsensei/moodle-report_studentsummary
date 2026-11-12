@@ -27,27 +27,51 @@ namespace report_studentsummary\admin;
 use report_studentsummary\local\palette;
 
 /**
- * A box background colour: empty (use the palette) or a #rrggbb colour that keeps the text readable.
+ * A box colour: its background or its text. Empty means use the palette; otherwise a #rrggbb colour.
+ *
+ * The background and the text colour of a box are checked together, so a dark background is accepted once a light
+ * text colour is chosen for the box (and the other way round).
  *
  * @package    report_studentsummary
  * @copyright  2026 Bill
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class setting_boxcolour extends \admin_setting_configcolourpicker {
+    /** @var string Box key from {@see palette::BOXES}. */
+    private string $box;
+
+    /** @var bool Whether this is the box's text colour rather than its background. */
+    private bool $text;
+
     /**
      * Constructor.
      *
      * @param string $box Box key from {@see palette::BOXES}.
+     * @param bool $text True for the box's text colour, false for its background.
      */
-    public function __construct(string $box) {
+    public function __construct(string $box, bool $text = false) {
+        $this->box = $box;
+        $this->text = $text;
+        $prefix = $text ? palette::TEXT_PREFIX : 'colour_';
         parent::__construct(
-            'report_studentsummary/colour_' . $box,
-            get_string('colour_' . $box, 'report_studentsummary'),
-            get_string('colour_desc', 'report_studentsummary', palette::MIN_CONTRAST),
+            'report_studentsummary/' . $prefix . $box,
+            get_string($prefix . $box, 'report_studentsummary'),
+            get_string($text ? 'textcolour_desc' : 'colour_desc', 'report_studentsummary', palette::MIN_CONTRAST),
             '',
             null,
             false
         );
+    }
+
+    /**
+     * The value of another setting of this box: as submitted with this form if it was, otherwise as stored.
+     *
+     * @param string $name Setting name without the plugin.
+     * @return string
+     */
+    private function other_value(string $name): string {
+        $submitted = optional_param('s_report_studentsummary_' . $name, null, PARAM_RAW);
+        return (string)($submitted ?? get_config('report_studentsummary', $name));
     }
 
     /**
@@ -61,11 +85,22 @@ class setting_boxcolour extends \admin_setting_configcolourpicker {
         if ($hex === null) {
             return get_string('colourinvalid', 'report_studentsummary');
         }
-        if ($hex !== '' && !palette::is_readable($hex, [palette::REFERENCE_INK])) {
-            return get_string('colourlowcontrast', 'report_studentsummary', [
-                'ratio' => format_float(palette::contrast(palette::REFERENCE_INK, $hex), 1),
-                'min' => palette::MIN_CONTRAST,
-            ]);
+        if ($hex !== '') {
+            $preset = palette::preset($this->other_value('palette') ?: null);
+            if ($this->text) {
+                $background = palette::normalise_hex($this->other_value('colour_' . $this->box)) ?: $preset['boxes'][$this->box][0];
+                $text = $hex;
+            } else {
+                $background = $hex;
+                $text = palette::normalise_hex($this->other_value(palette::TEXT_PREFIX . $this->box)) ?: null;
+            }
+            if (!palette::box_is_readable($background, $text, $preset)) {
+                $ink = $text ?? palette::REFERENCE_INK;
+                return get_string($this->text ? 'textcolourlowcontrast' : 'colourlowcontrast', 'report_studentsummary', [
+                    'ratio' => format_float(palette::contrast($ink, $background), 1),
+                    'min' => palette::MIN_CONTRAST,
+                ]);
+            }
         }
         return $this->config_write($this->name, $hex) ? '' : get_string('errorsetting', 'admin');
     }
